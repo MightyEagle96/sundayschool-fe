@@ -1,13 +1,15 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import CandidateLogin from "../pages/public/CandidateLogin";
-import AdminLogin from "../pages/public/AdminLogin";
+import CandidateLogin from "../pages/public/candidate/CandidateLogin";
+import AdminLogin from "../pages/public/admin/AdminLogin";
 import NotFound from "../pages/NotFound";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponents from "../components/FooterComponents";
-import SignUp from "../pages/public/SignUp";
+import SignUp from "../pages/public/candidate/SignUp";
 import CandidateHomePage from "../pages/private/candidate/CandidateHomePage";
 import { useAuth } from "./useAuth";
+import AdminSignup from "../pages/public/admin/AdminSignup";
+import AdminHomePage from "../pages/private/admin/AdminHomePage";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -18,12 +20,20 @@ function MainRoutes() {
       path: "/admin",
       component: <AdminLogin />,
     },
+    {
+      path: "/admin/signup",
+      component: <AdminSignup />,
+    },
   ];
 
   const privateRoutes = [
     {
       path: "/",
       component: <CandidateHomePage />,
+    },
+    {
+      path: "/admin",
+      component: <AdminHomePage />,
     },
   ];
 

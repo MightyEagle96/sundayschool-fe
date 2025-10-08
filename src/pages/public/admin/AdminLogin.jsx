@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from "../../assets/logo.png";
+import logo from "../../../assets/logo.png";
 import {
   TextField,
   Typography,
@@ -7,13 +7,13 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import { httpService } from "../../httpService";
+import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
 import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Login, Visibility, VisibilityOff } from "@mui/icons-material";
 
-function CandidateLogin() {
+function AdminLogin() {
   const [candidate, setCandidate] = useState({});
   const [loading, setLoading] = useState(false);
   const [passwordType, setPasswordType] = useState(false);
@@ -21,9 +21,12 @@ function CandidateLogin() {
     e.preventDefault();
     setLoading(true);
 
-    const { data, error } = await httpService.post("auth/login", candidate);
+    const { data, error } = await httpService.post(
+      "/auth/teacher/login",
+      candidate
+    );
     if (data) {
-      window.location.href = "/";
+      window.location.href = "/admin";
     }
     if (error) {
       toast.error(error);
@@ -47,7 +50,7 @@ function CandidateLogin() {
             </div>
             <div className="d-flex justify-content-center mb-5">
               <Typography variant="h5" fontWeight={700}>
-                Candidate Login
+                Admin Login
               </Typography>
             </div>
             <form onSubmit={loginCandidate}>
@@ -96,7 +99,11 @@ function CandidateLogin() {
               </Button>
               <div className="mt-4 text-center">
                 <Typography color="GrayText" variant="body2">
-                  <Nav.Link as={Link} to={"/signup"} className="text-success">
+                  <Nav.Link
+                    as={Link}
+                    to={"/admin/signup"}
+                    className="text-success"
+                  >
                     Don't have an account? Sign up now
                   </Nav.Link>
                   {/* <a href="/admin/login" className="text-success">
@@ -112,4 +119,4 @@ function CandidateLogin() {
   );
 }
 
-export default CandidateLogin;
+export default AdminLogin;

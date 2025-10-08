@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Button, MenuItem, TextField, Typography } from "@mui/material";
-import { adultClasses, yayaClasses } from "../../utils";
+import { adultClasses, yayaClasses } from "../../../utils";
 import Swal from "sweetalert2";
-import { httpService } from "../../httpService";
+import { httpService } from "../../../httpService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-function SignUp() {
+function AdminSignup() {
   const classes = ["adult", "yaya"];
   const genders = ["male", "female"];
 
@@ -73,12 +73,12 @@ function SignUp() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           const { data, error } = await httpService.post(
-            "auth/register",
+            "auth/teacher/register",
             userData
           );
 
           if (data) {
-            navigate("/");
+            navigate("/admin");
           }
           if (error) {
             toast.error(error);
@@ -103,7 +103,7 @@ function SignUp() {
       <div className="container mt-5 mb-5">
         <div className="mb-4">
           <Typography variant="h5" fontWeight={700}>
-            Create your sunday school account
+            Create your sunday school teacher account
           </Typography>
         </div>
 
@@ -241,4 +241,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default AdminSignup;

@@ -163,7 +163,7 @@ function NavbarComponent() {
                 <Nav.Link as={Link} to="/">
                   Login
                 </Nav.Link>
-                <Nav.Link as={Link} to="/admin/login">
+                <Nav.Link as={Link} to="/admin">
                   Admin-Login
                 </Nav.Link>
               </>
