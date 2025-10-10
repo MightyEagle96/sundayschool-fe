@@ -10,6 +10,7 @@ import CandidateHomePage from "../pages/private/candidate/CandidateHomePage";
 import { useAuth } from "./useAuth";
 import AdminSignup from "../pages/public/admin/AdminSignup";
 import AdminHomePage from "../pages/private/admin/AdminHomePage";
+import QuestionBankPage from "../pages/private/admin/QuestionBankPage";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -34,6 +35,10 @@ function MainRoutes() {
     {
       path: "/admin",
       component: <AdminHomePage />,
+    },
+    {
+      path: "/admin/questionbank",
+      component: <QuestionBankPage />,
     },
   ];
 

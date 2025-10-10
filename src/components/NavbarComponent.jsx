@@ -98,12 +98,13 @@ function NavbarComponent() {
 
   const links = getLinks();
 
+  console.log(user);
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand
           onClick={() =>
-            navigate(user && user.role === "admin" ? "/admin/dashboard" : "/")
+            navigate(user && user.role === "teacher" ? "/admin/" : "/")
           }
           style={{ cursor: "pointer" }}
         >
