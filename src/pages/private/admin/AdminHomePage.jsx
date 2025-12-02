@@ -16,19 +16,50 @@ function AdminHomePage() {
 
   return (
     <div>
-      <div className="mt-5 mb-5 ">
-        <div className="bg-light pt-5 pb-5 mb-5 ">
-          <div className="container">
-            <div>
-              <Typography gutterBottom>Hi There</Typography>
-              <Typography variant="h4" fontWeight={700}>
-                {user.firstName} {user.lastName}
-              </Typography>
-            </div>
+      <div className="mt-5 mb-5 container">
+        <div className=" mb-5">
+          <div className="text-muted">
+            <Typography gutterBottom>Hi There</Typography>
+            <Typography variant="h4" fontWeight={700}>
+              {user.firstName} {user.lastName}
+            </Typography>
           </div>
         </div>
-        <div className="container">
+
+        <div className="">
           <div className="row">
+            <div className="col-lg-4">
+              <div>
+                <Card sx={{ maxWidth: "100%" }}>
+                  <CardMedia
+                    sx={{ height: 200 }}
+                    image="https://rccgregina.org/site/wp-content/uploads/2025/02/sundayschool.jpg"
+                    title="Question Banks"
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      Examinations
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}
+                    >
+                      Create examinations and manage them here
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    {/* <Nav.Link as={Link} to="/admin/questionbank">
+                      <Typography color="primary">
+                        View Question Banks
+                      </Typography>
+                    </Nav.Link> */}
+                    <Button size="small" as={Link} to="/admin/examinations">
+                      View Examinations
+                    </Button>
+                  </CardActions>
+                </Card>
+              </div>
+            </div>
             <div className="col-lg-4">
               <div>
                 <Card sx={{ maxWidth: "100%" }}>

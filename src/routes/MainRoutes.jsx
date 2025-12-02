@@ -11,6 +11,7 @@ import { useAuth } from "./useAuth";
 import AdminSignup from "../pages/public/admin/AdminSignup";
 import AdminHomePage from "../pages/private/admin/AdminHomePage";
 import QuestionBankPage from "../pages/private/admin/QuestionBankPage";
+import Examinations from "../pages/private/admin/Examinations";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -39,6 +40,10 @@ function MainRoutes() {
     {
       path: "/admin/questionbank",
       component: <QuestionBankPage />,
+    },
+    {
+      path: "/admin/examinations",
+      component: <Examinations />,
     },
   ];
 

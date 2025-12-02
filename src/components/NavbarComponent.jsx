@@ -98,7 +98,6 @@ function NavbarComponent() {
 
   const links = getLinks();
 
-  console.log(user);
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>

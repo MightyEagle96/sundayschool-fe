@@ -143,7 +143,7 @@ function AdminSignup() {
                   ))}
                 </TextField>
               </div>
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <TextField
                   label="Class Category"
                   fullWidth
@@ -175,7 +175,7 @@ function AdminSignup() {
                     </MenuItem>
                   ))}
                 </TextField>
-              </div>
+              </div>*/}
             </div>
 
             <div className="col-lg-6 mb-4">
