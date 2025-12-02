@@ -93,12 +93,13 @@ function Examinations() {
     setShow(true);
   };
   const getData = async () => {
-    const { data, error } = await httpService("examination/view");
+    setLoading(true);
+    const { data } = await httpService("examination/view");
 
     if (data) {
       setExaminations(data);
-      console.log(data);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -112,7 +113,7 @@ function Examinations() {
             Examinations
           </Typography>
           <Button endIcon={<Add />} onClick={() => setShow(!show)}>
-            Create new examiantion
+            Create new examination
           </Button>
         </div>
         <div>
@@ -120,6 +121,7 @@ function Examinations() {
             columns={columns}
             rows={examinations}
             rowCount={examinations.length}
+            loading={loading}
           />
         </div>
       </div>
