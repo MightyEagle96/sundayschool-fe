@@ -1,64 +1,80 @@
-import React, { useEffect, useState } from "react";
-
-import Breadcrumbs from "@mui/material/Breadcrumbs";
+import { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { httpService } from "../../../httpService";
-import { toast } from "react-toastify";
 import Button from "@mui/material/Button";
-import { Modal } from "react-bootstrap";
-import Alert from "@mui/material/Alert";
+import { DataGrid } from "@mui/x-data-grid";
+import { ApplicationNavigation } from "../../../routes/MainRoutes";
+import { KeyboardArrowRight } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 function QuestionBankPage() {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const getData = async () => {
-    const { data, error } = await httpService("questionbank/count");
+  const [examinations, setExaminations] = useState([]);
+
+  const getExaminations = async () => {
+    setLoading(true);
+    const { data } = await httpService("examination/view");
 
     if (data) {
-      console.log(data);
+      setExaminations(data);
     }
-    if (error) {
-      toast(error);
-    }
+    setLoading(false);
   };
 
   useEffect(() => {
-    getData();
+    getExaminations();
   }, []);
+
+  const columns = [
+    { field: "id", headerName: "S/N", width: 70 },
+    { headerName: "Title", field: "title", width: 400 },
+    {
+      headerName: "Yaya Questions",
+      field: "yayaQuestions",
+      width: 200,
+      renderCell: () => 10,
+    },
+    {
+      headerName: "Adult Questions",
+      field: "adultQuestions",
+      width: 200,
+      renderCell: () => 15,
+    },
+    {
+      headerName: "Action",
+      field: "description",
+      width: 400,
+      renderCell: (params) => (
+        <Button
+          //onClick={() => console.log(params.row)}
+          as={Link}
+          to={`/admin/examquestions?examination=${params.row._id}&title=${params.row.title}`}
+          endIcon={<KeyboardArrowRight />}
+          sx={{ textTransform: "capitalize", textDecoration: "none" }}
+        >
+          view
+        </Button>
+      ),
+    },
+  ];
   return (
     <div>
       <div className="mt-5 mb-5">
         <div className="container">
           <div className="mb-4">
-            <Typography variant="h4" fontWeight={700}>
-              Question Banks
-            </Typography>
+            <ApplicationNavigation links={[]} pageTitle={"Question Banks"} />
           </div>
           <div>
-            <Button onClick={() => setShow(!show)}>Create new bank</Button>
+            <DataGrid
+              columns={columns}
+              rows={examinations}
+              rowCount={examinations.length}
+              loading={loading}
+            />
           </div>
         </div>
       </div>
-      <Modal show={show} onHide={() => setShow(!show)}>
-        <Modal.Header className="border-0 bg-light" closeButton>
-          <Modal.Title>New Question Bank</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Alert severity="info" className="mb-3">
-            To create a new question bank, enter the name of the examination you
-            wish to add questions to. For example, 1st Quarter 2025/2026 Sunday
-            school examination.
-          </Alert>
-        </Modal.Body>
-        <Modal.Footer className="border-0">
-          <Button color="error" onClick={() => setShow(!show)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 }

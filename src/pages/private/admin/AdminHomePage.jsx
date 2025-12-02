@@ -81,7 +81,7 @@ function AdminHomePage() {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Nav.Link as={Link} to="/admin/questionbank">
+                    <Nav.Link as={Link} to="/admin/questionbanks">
                       <Typography color="primary">
                         View Question Banks
                       </Typography>

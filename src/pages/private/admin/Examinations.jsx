@@ -1,10 +1,4 @@
-import {
-  Alert,
-  Button,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Button, IconButton, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Add, Delete, Edit } from "@mui/icons-material";
@@ -12,6 +6,7 @@ import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { DataGrid } from "@mui/x-data-grid";
+import { ApplicationNavigation } from "../../../routes/MainRoutes";
 
 function Examinations() {
   const [show, setShow] = useState(false);
@@ -79,7 +74,12 @@ function Examinations() {
       width: 100,
       renderCell: (params) => {
         return (
-          <IconButton color="error" onClick={() => {}}>
+          <IconButton
+            color="error"
+            onClick={() => {
+              deleteExamination(params.row._id);
+            }}
+          >
             <Delete />
           </IconButton>
         );
@@ -105,13 +105,34 @@ function Examinations() {
   useEffect(() => {
     getData();
   }, []);
+
+  const deleteExamination = (id) => {
+    Swal.fire({
+      icon: "question",
+      title: "Delete Examination",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { data, error } = await httpService.get("examination/delete", {
+          params: { id },
+        });
+
+        if (data) {
+          toast.success(data);
+          getData();
+        }
+
+        if (error) {
+          toast.error(error);
+        }
+      }
+    });
+  };
   return (
     <div>
       <div className="container mt-5 mb-5">
         <div className="mb-4">
-          <Typography variant="h4" fontWeight={700}>
-            Examinations
-          </Typography>
+          <ApplicationNavigation links={[]} pageTitle={"Examination"} />
           <Button endIcon={<Add />} onClick={() => setShow(!show)}>
             Create new examination
           </Button>
@@ -134,12 +155,12 @@ function Examinations() {
       >
         <Modal.Header className="border-0 bg-light" closeButton>
           <Modal.Title>
-            {examination ? "Update Examination" : "Create Examination"}
+            {examinationId ? "Update Examination" : "Create Examination"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Alert severity="info" className="mb-3">
-            {examination
+            {examinationId
               ? "Update examination name."
               : "Create new examination."}{" "}
             For example,{" "}
@@ -163,7 +184,7 @@ function Examinations() {
             className="me-2"
             loading={loading}
           >
-            Create
+            {examinationId ? "Update" : "Create"}
           </Button>
           <Button color="error" onClick={() => setShow(!show)}>
             Cancel

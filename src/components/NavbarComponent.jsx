@@ -14,76 +14,6 @@ function NavbarComponent() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const adminLinks = [
-    { path: "/admin/dashboard", text: "Home" },
-    { path: "/admin/officers", text: "Desk Officers" },
-    { path: "/admin/candidates", text: "Candidates" },
-    {
-      path: `/admin/promorecommended/`,
-      text: "Recommendations",
-    },
-    {
-      path: `/admin/approvedcandidates/`,
-      text: "Approvals",
-    },
-    {
-      path: `/admin/searchcandidate/`,
-      text: "Search Candidate(s)",
-    },
-    {
-      path: `/admin/corrections/`,
-      text: "Correction(s)",
-    },
-  ];
-
-  const hrLinks = [
-    { path: "/admin/dashboard", text: "Home" },
-    { path: `/admin/hrcandidates/${user?.mda}`, text: "Candidates" },
-    {
-      path: `/admin/recommendedcandidates/${user?.mda}`,
-      text: "Recommended ",
-    },
-  ];
-  const promotionLinks = [
-    { path: "/admin/dashboard", text: "Home" },
-
-    {
-      path: `/admin/promorecommended/`,
-      text: "Recommended",
-    },
-    {
-      path: `/admin/approvedcandidates/`,
-      text: "Approved",
-    },
-  ];
-
-  const candidateLinks = [
-    { path: "/", text: "Home" },
-    { path: "/documentstoupload", text: "Documents to upload" },
-    { path: "/datacorrection", text: "Data Correction" },
-  ];
-
-  // ✅ Centralized link resolver
-  const getLinks = () => {
-    if (!user) return [];
-    if (user.role === "admin" && user.specificRole === "admin") {
-      document.title = "Admin Dashboard";
-      return adminLinks;
-    }
-    if (user.role === "admin" && user.specificRole === "hr") {
-      document.title = "HR Dashboard";
-      return hrLinks;
-    }
-    if (user.role === "admin" && user.specificRole === "promotion") {
-      document.title = "Promotion Dashboard";
-      return promotionLinks;
-    }
-    if (user.role === "candidate") {
-      document.title = "Candidate Dashboard";
-      return candidateLinks;
-    }
-    return [];
-  };
   const handleLogout = async () => {
     setLoading(true);
     try {
@@ -96,7 +26,20 @@ function NavbarComponent() {
     }
   };
 
-  const links = getLinks();
+  const links = [
+    {
+      text: "Home",
+      path: "/admin",
+    },
+    {
+      text: "Examinations",
+      path: "/admin/examinations",
+    },
+    {
+      text: "Question Banks",
+      path: "/admin/questionbanks",
+    },
+  ];
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
