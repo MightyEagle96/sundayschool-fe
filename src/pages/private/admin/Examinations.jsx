@@ -1,15 +1,24 @@
-import { Alert, Button, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import {
+  Alert,
+  Button,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { Add } from "@mui/icons-material";
+import { Add, Delete, Edit } from "@mui/icons-material";
 import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { DataGrid } from "@mui/x-data-grid";
 
 function Examinations() {
   const [show, setShow] = useState(false);
   const [examination, setExamination] = useState("");
   const [loading, setLoading] = useState(false);
+  const [examinations, setExaminations] = useState([]);
+  const [examinationId, setExaminationId] = useState("");
 
   const createExamination = () => {
     Swal.fire({
@@ -24,10 +33,12 @@ function Examinations() {
         setLoading(true);
         const { data, error } = await httpService.post("examination/create", {
           title: examination,
+          examinationId,
         });
 
         if (data) {
           toast.success(data);
+          getData();
           // console.log(data);
         }
         if (error) {
@@ -35,9 +46,64 @@ function Examinations() {
         }
         setShow(false);
         setLoading(false);
+
+        setExamination("");
+        setExaminationId("");
       }
     });
   };
+
+  const columns = [
+    { field: "id", headerName: "S/N", width: 70 },
+    { headerName: "Title", field: "title", width: 400 },
+    {
+      headerName: "Edit",
+      field: "edit",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <IconButton
+            color="warning"
+            onClick={() => {
+              editData(params.row);
+            }}
+          >
+            <Edit />
+          </IconButton>
+        );
+      },
+    },
+    {
+      headerName: "Delete",
+      field: "delete",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <IconButton color="error" onClick={() => {}}>
+            <Delete />
+          </IconButton>
+        );
+      },
+    },
+  ];
+
+  const editData = (data) => {
+    setExamination(data.title);
+    setExaminationId(data._id);
+    setShow(true);
+  };
+  const getData = async () => {
+    const { data, error } = await httpService("examination/view");
+
+    if (data) {
+      setExaminations(data);
+      console.log(data);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <div>
       <div className="container mt-5 mb-5">
@@ -49,15 +115,32 @@ function Examinations() {
             Create new examiantion
           </Button>
         </div>
-        <div></div>
+        <div>
+          <DataGrid
+            columns={columns}
+            rows={examinations}
+            rowCount={examinations.length}
+          />
+        </div>
       </div>
-      <Modal show={show} onHide={() => setShow(!show)}>
+      <Modal
+        show={show}
+        onHide={() => {
+          setShow(!show);
+          setExamination("");
+        }}
+      >
         <Modal.Header className="border-0 bg-light" closeButton>
-          <Modal.Title>Create new examination</Modal.Title>
+          <Modal.Title>
+            {examination ? "Update Examination" : "Create Examination"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Alert severity="info" className="mb-3">
-            Create a new examination. For example,{" "}
+            {examination
+              ? "Update examination name."
+              : "Create new examination."}{" "}
+            For example,{" "}
             <strong>1st Quarter 2025/2026 Sunday school examination</strong>.
           </Alert>
 
@@ -67,6 +150,7 @@ function Examinations() {
               label="Examination name"
               variant="outlined"
               onChange={(e) => setExamination(e.target.value)}
+              value={examination}
             />
           </div>
         </Modal.Body>
