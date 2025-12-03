@@ -1,26 +1,58 @@
-import { Button, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { Alert, Button, MenuItem, TextField } from "@mui/material";
+import React, { useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ApplicationNavigation } from "../../../routes/MainRoutes";
 import { Modal } from "react-bootstrap";
+import { Editor } from "@tinymce/tinymce-react";
 
 function ExamQuestions() {
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const [classCategory, setClassCategory] = useState("");
   const [show, setShow] = useState(false);
+  const [questionData, setQuestionData] = useState({
+    question: "",
+    optionA: "",
+    optionB: "",
+    optionC: "",
+    optionD: "",
+    correctAnswer: "",
+  });
 
-  const examination = params.get("examination");
   const title = params.get("title");
+  const examination = params.get("examination");
+  const editorRef = useRef(null);
 
-  console.log({ examination, title });
+  /**
+   * Clean, non-mutating, dynamic addQuestion
+   */
+  const addQuestion = () => {
+    const { optionA, optionB, optionC, optionD, ...rest } = questionData;
+
+    const options = [optionA, optionB, optionC, optionD];
+
+    const body = {
+      ...rest,
+      options,
+      classCategory,
+      examination,
+    };
+
+    console.log("FINAL BODY:", body);
+
+    // Reset form (optional)
+    // setQuestionData({...})
+    // setShow(false)
+  };
+
   return (
     <div>
       <div className="mt-5">
         <div className="container">
           <ApplicationNavigation
             links={[{ path: "/admin/questionbanks", name: "Question Banks" }]}
-            pageTitle={title.toLocaleUpperCase()}
+            pageTitle={title.toUpperCase()}
           />
+
           <div className="row">
             <div className="col-lg-4">
               <Button
@@ -29,9 +61,10 @@ function ExamQuestions() {
                   setShow(true);
                 }}
               >
-                Add Questions for adult class
+                Add Questions for Adult class
               </Button>
             </div>
+
             <div className="col-lg-4">
               <Button
                 color="error"
@@ -46,6 +79,8 @@ function ExamQuestions() {
           </div>
         </div>
       </div>
+
+      {/* MODAL */}
       <Modal
         size="xl"
         centered
@@ -56,17 +91,92 @@ function ExamQuestions() {
         }}
       >
         <Modal.Header closeButton className="border-0 bg-light">
-          <Modal.Title style={{ textTransform: "" }}>
-            Set question for{" "}
-            <span className="text-uppercase fw-bold">{classCategory}</span>{" "}
-            class.
-          </Modal.Title>
+          <Modal.Title>Add a new question</Modal.Title>
         </Modal.Header>
+
         <Modal.Body>
-          <Typography>Modal body text goes here.</Typography>
+          <div>
+            <div className="col-lg-4 mb-4">
+              <Alert severity="info">
+                You are setting questions for{" "}
+                <span className="text-uppercase fw-bold">{classCategory}</span>{" "}
+                class.
+              </Alert>
+            </div>
+
+            {/* QUESTION EDITOR */}
+            <div className="mb-4">
+              <Editor
+                apiKey="kr1fydau7g3kamoqb7lixf0v4eimmdyl47qgitns438clgq8"
+                onInit={(_, editor) => (editorRef.current = editor)}
+                onEditorChange={(content) =>
+                  setQuestionData((prev) => ({ ...prev, question: content }))
+                }
+                init={{
+                  height: 200,
+                  menubar: false,
+                  placeholder: "Write your question here...",
+                  plugins: [
+                    "advlist autolink lists link image charmap media table code wordcount",
+                  ],
+                  toolbar:
+                    "undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | code | bullist numlist outdent indent | removeformat | help",
+                  content_style:
+                    "body { font-family:Helvetica,Arial,sans-serif; font-size:16px }",
+                }}
+              />
+            </div>
+
+            {/* OPTIONS */}
+            <div className="row">
+              {["A", "B", "C", "D"].map((letter) => (
+                <div className="col-lg-3 mb-3" key={letter}>
+                  <TextField
+                    fullWidth
+                    label={`Option ${letter}`}
+                    variant="outlined"
+                    onChange={(e) =>
+                      setQuestionData((prev) => ({
+                        ...prev,
+                        [`option${letter}`]: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              ))}
+
+              {/* Correct Answer */}
+              <div className="col-lg-3 mb-3">
+                <TextField
+                  fullWidth
+                  label="Correct Answer"
+                  variant="outlined"
+                  select
+                  onChange={(e) =>
+                    setQuestionData((prev) => ({
+                      ...prev,
+                      correctAnswer: e.target.value,
+                    }))
+                  }
+                >
+                  {["A", "B", "C", "D"].map((letter) => (
+                    <MenuItem
+                      key={letter}
+                      value={questionData[`option${letter}`]}
+                    >
+                      {questionData[`option${letter}`] || `Option ${letter}`}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+            </div>
+          </div>
         </Modal.Body>
+
         <Modal.Footer>
-          <Button>Save Changes</Button>
+          <Button variant="contained" onClick={addQuestion}>
+            Add Question
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
