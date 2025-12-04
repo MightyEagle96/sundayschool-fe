@@ -349,7 +349,7 @@ function ExamQuestions() {
                       >
                         <div>
                           <Typography variant="body2">
-                            Total Questions:{" "}
+                            YAYA Questions:{" "}
                           </Typography>
                         </div>
                         <div>
