@@ -8,6 +8,7 @@ import {
   ButtonBase,
   CircularProgress,
   IconButton,
+  Stack,
 } from "@mui/material";
 import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -17,7 +18,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
-import { green, red } from "@mui/material/colors";
+import { blue, blueGrey, green, red } from "@mui/material/colors";
 import { Delete, Edit } from "@mui/icons-material";
 import Swal from "sweetalert2";
 
@@ -37,6 +38,13 @@ function ExamQuestions() {
   const [questions, setQuestions] = useState([]);
   const [file, setFile] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [questionsCount, setQuestionsCount] = useState({
+    yayaQuestions: 0,
+    adultQuestions: 0,
+    totalQuestions: 0,
+  });
+
+  const [deletingBank, setDeletingBank] = useState(false);
 
   const fileRef = useRef();
 
@@ -80,7 +88,9 @@ function ExamQuestions() {
       params: { examination },
     });
     if (data) {
-      setQuestions(data);
+      console.log(data);
+      setQuestions(data.questions);
+      setQuestionsCount(data.questionsCount);
     }
     if (error) {
       toast.error(error);
@@ -220,6 +230,36 @@ function ExamQuestions() {
     setFile(null);
     setLoading(false);
   };
+
+  const deleteQuestionBank = () => {
+    Swal.fire({
+      icon: "question",
+      title: "Delete Question Bank",
+      text: "Are you sure you want to delete this question bank?",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setDeletingBank(true);
+        const { data, error } = await httpService.get(
+          "questionbank/deletequestionbank",
+          {
+            params: { examination },
+          }
+        );
+
+        if (data) {
+          toast.success(data);
+          getQuestions();
+        }
+
+        if (error) {
+          toast.error(error);
+        }
+
+        setDeletingBank(false);
+      }
+    });
+  };
   return (
     <div>
       <div className="mt-5">
@@ -232,9 +272,9 @@ function ExamQuestions() {
           </div>
 
           <div className="bg-light pt-4 pb-4">
-            <div className="container">
-              <div className="row">
-                <div className="col-lg-4 border-end">
+            <div className="">
+              <div className="row d-flex justify-content-center">
+                <div className="col-lg-3">
                   <Button
                     onClick={() => {
                       setClassCategory("adult");
@@ -254,7 +294,7 @@ function ExamQuestions() {
                   </Button>
                 </div>
 
-                <div className="col-lg-4 border-end">
+                <div className="col-lg-3 border-start border-end">
                   <Typography variant="caption">
                     Upload a csv of excel file of the questions
                   </Typography>
@@ -265,6 +305,84 @@ function ExamQuestions() {
                     onChange={handleFile}
                     ref={fileRef}
                   />
+                </div>
+
+                <div className="col-lg-4">
+                  <div className="row">
+                    <div className="col-lg-6">
+                      <Stack
+                        direction={"row"}
+                        spacing={1}
+                        className="d-flex align-items-center mb-3"
+                      >
+                        <div>
+                          <Typography variant="body2">
+                            Total Questions:{" "}
+                          </Typography>
+                        </div>
+                        <div>
+                          <Avatar sx={{ backgroundColor: blueGrey[700] }}>
+                            {questionsCount.totalQuestions}
+                          </Avatar>
+                        </div>
+                      </Stack>
+                      <Stack
+                        direction={"row"}
+                        spacing={1}
+                        className="d-flex align-items-center mb-3"
+                      >
+                        <div>
+                          <Typography variant="body2">
+                            Adult Questions:{" "}
+                          </Typography>
+                        </div>
+                        <div>
+                          <Avatar sx={{ backgroundColor: blue[700] }}>
+                            {questionsCount.adultQuestions}
+                          </Avatar>
+                        </div>
+                      </Stack>
+                      <Stack
+                        direction={"row"}
+                        spacing={1}
+                        className="d-flex align-items-center mb-3"
+                      >
+                        <div>
+                          <Typography variant="body2">
+                            Total Questions:{" "}
+                          </Typography>
+                        </div>
+                        <div>
+                          <Avatar sx={{ backgroundColor: green[700] }}>
+                            {questionsCount.yayaQuestions}
+                          </Avatar>
+                        </div>
+                      </Stack>
+                    </div>
+                    <div className="col-lg-6">
+                      <Button
+                        disabled={questionsCount.totalQuestions === 0}
+                        variant="contained"
+                        endIcon={<Delete />}
+                        color="error"
+                        sx={{ textTransform: "capitalize" }}
+                        onClick={deleteQuestionBank}
+                        loading={deletingBank}
+                        loadingPosition="end"
+                      >
+                        {" "}
+                        Delete question bank
+                      </Button>
+                      <Typography
+                        color="error"
+                        variant="body2"
+                        className="mt-3"
+                      >
+                        This will delete all entered questions and clear out the
+                        question bank to allow for a new upload.
+                      </Typography>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
