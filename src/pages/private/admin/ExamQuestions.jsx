@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
 
 function ExamQuestions() {
+  const [loading, setLoading] = useState(false);
   const [params] = useSearchParams();
   const [classCategory, setClassCategory] = useState("");
   const [show, setShow] = useState(false);
@@ -24,7 +25,6 @@ function ExamQuestions() {
 
   const title = params.get("title");
   const examination = params.get("examination");
-  const editorRef = useRef(null);
 
   /**
    * Clean, non-mutating, dynamic addQuestion
@@ -58,17 +58,17 @@ function ExamQuestions() {
   };
 
   const getQuestions = async () => {
+    setLoading(true);
     const { data, error } = await httpService.get("/questionBank/view", {
       params: { examination },
     });
     if (data) {
-      //(data);
-      console.log(data);
       setQuestions(data);
     }
     if (error) {
       toast.error(error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -165,7 +165,7 @@ function ExamQuestions() {
           </div>
         </div>
         <div className="p-3">
-          <DataGrid columns={columns} rows={questions} />
+          <DataGrid columns={columns} rows={questions} loading={loading} />
         </div>
       </div>
 
