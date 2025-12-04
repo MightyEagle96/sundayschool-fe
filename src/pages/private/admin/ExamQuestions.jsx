@@ -7,6 +7,7 @@ import {
   Typography,
   ButtonBase,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -17,6 +18,8 @@ import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
 import { green, red } from "@mui/material/colors";
+import { Delete, Edit } from "@mui/icons-material";
+import Swal from "sweetalert2";
 
 function ExamQuestions() {
   const [loading, setLoading] = useState(false);
@@ -33,6 +36,7 @@ function ExamQuestions() {
   });
   const [questions, setQuestions] = useState([]);
   const [file, setFile] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fileRef = useRef();
 
@@ -137,10 +141,56 @@ function ExamQuestions() {
       width: 300,
       renderCell: (params) => `${params.row.correctAnswer}`,
     },
-
-    //{ field: "options", headerName: "Options", width: 400 },
+    {
+      field: "edit",
+      headerName: "Edit",
+      width: 100,
+      renderCell: (params) => (
+        <IconButton>
+          <Edit color="warning" />
+        </IconButton>
+      ),
+    },
+    {
+      field: "delete",
+      headerName: "Delete",
+      width: 100,
+      renderCell: (params) => (
+        <IconButton onClick={() => deleteQuestion(params.row._id)}>
+          {deleting ? (
+            <CircularProgress color="inherit" size={20} />
+          ) : (
+            <Delete color="error" />
+          )}
+        </IconButton>
+      ),
+    },
   ];
 
+  const deleteQuestion = (question) => {
+    Swal.fire({
+      icon: "question",
+      title: "Delete Question",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setDeleting(true);
+        const { data, error } = await httpService.get("questionbank/delete", {
+          params: { examination, question },
+        });
+
+        if (data) {
+          toast.success(data);
+          getQuestions();
+        }
+
+        if (error) {
+          toast.error(error);
+        }
+        setDeleting(false);
+      }
+    });
+  };
   //const rows = [];
 
   const handleFile = async (e) => {
