@@ -1,9 +1,12 @@
 import { Alert, Button, MenuItem, TextField } from "@mui/material";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ApplicationNavigation } from "../../../routes/MainRoutes";
-import { Modal } from "react-bootstrap";
+import { Badge, Modal } from "react-bootstrap";
 import { Editor } from "@tinymce/tinymce-react";
+import { httpService } from "../../../httpService";
+import { toast } from "react-toastify";
+import { DataGrid } from "@mui/x-data-grid";
 
 function ExamQuestions() {
   const [params] = useSearchParams();
@@ -17,6 +20,7 @@ function ExamQuestions() {
     optionD: "",
     correctAnswer: "",
   });
+  const [questions, setQuestions] = useState([]);
 
   const title = params.get("title");
   const examination = params.get("examination");
@@ -25,7 +29,7 @@ function ExamQuestions() {
   /**
    * Clean, non-mutating, dynamic addQuestion
    */
-  const addQuestion = () => {
+  const addQuestion = async () => {
     const { optionA, optionB, optionC, optionD, ...rest } = questionData;
 
     const options = [optionA, optionB, optionC, optionD];
@@ -37,12 +41,94 @@ function ExamQuestions() {
       examination,
     };
 
-    console.log("FINAL BODY:", body);
+    const { data, error } = await httpService.post(
+      "/questionBank/create",
+      body
+    );
 
-    // Reset form (optional)
-    // setQuestionData({...})
-    // setShow(false)
+    if (data) {
+      getQuestions();
+      toast.success(data);
+    }
+    if (error) {
+      toast.error(error);
+    }
+    setClassCategory("");
+    setShow(false);
   };
+
+  const getQuestions = async () => {
+    const { data, error } = await httpService.get("/questionBank/view", {
+      params: { examination },
+    });
+    if (data) {
+      //(data);
+      console.log(data);
+      setQuestions(data);
+    }
+    if (error) {
+      toast.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getQuestions();
+  }, []);
+
+  const columns = [
+    { field: "id", headerName: "S/N", width: 70 },
+    {
+      field: "classCategory",
+      headerName: "Class Category",
+      width: 200,
+      renderCell: (params) => (
+        <span>
+          <Badge
+            pill
+            bg={params.row.classCategory === "yaya" ? "success" : "warning"}
+            className="text-uppercase"
+          >
+            {params.row.classCategory}
+          </Badge>
+        </span>
+      ),
+    },
+    { field: "question", headerName: "Question", width: 300 },
+    {
+      field: "optionA",
+      headerName: "Option A",
+      width: 300,
+      renderCell: (params) => `${params.row.options[0]}`,
+    },
+    {
+      field: "optionB",
+      headerName: "Option B",
+      width: 300,
+      renderCell: (params) => `${params.row.options[1]}`,
+    },
+    {
+      field: "optionC",
+      headerName: "Option C",
+      width: 300,
+      renderCell: (params) => `${params.row.options[2]}`,
+    },
+    {
+      field: "optionD",
+      headerName: "Option D",
+      width: 300,
+      renderCell: (params) => `${params.row.options[3]}`,
+    },
+    {
+      field: "correctAnswer",
+      headerName: "Correct Answer",
+      width: 300,
+      renderCell: (params) => `${params.row.correctAnswer}`,
+    },
+
+    //{ field: "options", headerName: "Options", width: 400 },
+  ];
+
+  //const rows = [];
 
   return (
     <div>
@@ -78,6 +164,9 @@ function ExamQuestions() {
             </div>
           </div>
         </div>
+        <div className="p-3">
+          <DataGrid columns={columns} rows={questions} />
+        </div>
       </div>
 
       {/* MODAL */}
@@ -106,7 +195,7 @@ function ExamQuestions() {
 
             {/* QUESTION EDITOR */}
             <div className="mb-4">
-              <Editor
+              {/* <Editor
                 apiKey="kr1fydau7g3kamoqb7lixf0v4eimmdyl47qgitns438clgq8"
                 onInit={(_, editor) => (editorRef.current = editor)}
                 onEditorChange={(content) =>
@@ -124,6 +213,15 @@ function ExamQuestions() {
                   content_style:
                     "body { font-family:Helvetica,Arial,sans-serif; font-size:16px }",
                 }}
+              /> */}
+              <TextField
+                multiline
+                maxRows={3}
+                fullWidth
+                label="Question"
+                onChange={(e) =>
+                  setQuestionData({ ...questionData, question: e.target.value })
+                }
               />
             </div>
 
