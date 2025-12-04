@@ -1,4 +1,13 @@
-import { Alert, Button, MenuItem, TextField } from "@mui/material";
+import {
+  Alert,
+  Avatar,
+  Button,
+  MenuItem,
+  TextField,
+  Typography,
+  ButtonBase,
+  CircularProgress,
+} from "@mui/material";
 import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ApplicationNavigation } from "../../../routes/MainRoutes";
@@ -7,6 +16,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
+import { green, red } from "@mui/material/colors";
 
 function ExamQuestions() {
   const [loading, setLoading] = useState(false);
@@ -22,6 +32,9 @@ function ExamQuestions() {
     correctAnswer: "",
   });
   const [questions, setQuestions] = useState([]);
+  const [file, setFile] = useState(null);
+
+  const fileRef = useRef();
 
   const title = params.get("title");
   const examination = params.get("examination");
@@ -130,6 +143,33 @@ function ExamQuestions() {
 
   //const rows = [];
 
+  const handleFile = async (e) => {
+    const file = e.target.files[0];
+    setFile(file);
+
+    e.target.value = null;
+  };
+
+  const uploadFile = async (category) => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const { data, error } = await httpService.post(
+      "/questionBank/upload",
+      formData,
+      { params: { examination, classCategory: category } }
+    );
+    if (data) {
+      toast.success(data);
+    }
+    if (error) {
+      toast.error(error);
+    }
+    getQuestions();
+    setFile(null);
+    setLoading(false);
+  };
   return (
     <div>
       <div className="mt-5">
@@ -149,9 +189,6 @@ function ExamQuestions() {
               >
                 Add Questions for Adult class
               </Button>
-            </div>
-
-            <div className="col-lg-4">
               <Button
                 color="error"
                 onClick={() => {
@@ -161,6 +198,19 @@ function ExamQuestions() {
               >
                 Add Questions for YAYA class
               </Button>
+            </div>
+
+            <div className="col-lg-4">
+              <Typography variant="caption">
+                Upload a csv of excel file of the questions
+              </Typography>
+              <input
+                className="form-control"
+                type="file"
+                accept=".csv, .xlsx, .xls"
+                onChange={handleFile}
+                ref={fileRef}
+              />
             </div>
           </div>
         </div>
@@ -276,6 +326,89 @@ function ExamQuestions() {
             Add Question
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      <Modal backdrop="static" show={file} onHide={() => setFile(null)}>
+        <Modal.Header closeButton className="border-0"></Modal.Header>
+        <Modal.Body>
+          <div className="text-center">
+            <Typography>
+              Click any of this catgory to upload the questions
+            </Typography>
+          </div>
+          <div className="row d-flex justify-content-center mb-4">
+            {/* ADULT */}
+            <div className="col-lg-3 d-flex justify-content-center  text-center">
+              <ButtonBase
+                // onClick={() => console.log("ADULT clicked")}
+                onClick={() => uploadFile("adult")}
+                sx={{
+                  borderRadius: "12px",
+                  padding: 2,
+                  display: "inline-flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Avatar
+                  sx={{
+                    height: 100,
+                    width: 100,
+                    backgroundColor: red[700],
+                    fontSize: 35,
+                  }}
+                >
+                  A
+                </Avatar>
+                <Typography
+                  color="GrayText"
+                  sx={{ marginTop: 1, fontWeight: 700 }}
+                >
+                  ADULT
+                </Typography>
+              </ButtonBase>
+            </div>
+
+            {/* YAYA */}
+            <div className="col-lg-3 d-flex justify-content-center text-center">
+              <ButtonBase
+                //onClick={() => console.log("YAYA clicked")}
+                onClick={() => uploadFile("yaya")}
+                sx={{
+                  borderRadius: "12px",
+                  padding: 2,
+                  display: "inline-flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Avatar
+                  sx={{
+                    height: 100,
+                    width: 100,
+                    backgroundColor: green[700],
+                    fontSize: 35,
+                  }}
+                >
+                  Y
+                </Avatar>
+                <Typography
+                  color="GrayText"
+                  sx={{ marginTop: 1, fontWeight: 700 }}
+                >
+                  YAYA
+                </Typography>
+              </ButtonBase>
+            </div>
+          </div>
+          {loading && (
+            <div className="text-center">
+              <CircularProgress color="GrayText" size={30} />
+            </div>
+          )}
+        </Modal.Body>
       </Modal>
     </div>
   );
