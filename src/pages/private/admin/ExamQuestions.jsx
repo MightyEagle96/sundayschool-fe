@@ -96,8 +96,8 @@ function ExamQuestions() {
     { field: "id", headerName: "S/N", width: 70 },
     {
       field: "classCategory",
-      headerName: "Class Category",
-      width: 200,
+      headerName: "Category",
+      width: 100,
       renderCell: (params) => (
         <span>
           <Badge
@@ -114,31 +114,31 @@ function ExamQuestions() {
     {
       field: "optionA",
       headerName: "Option A",
-      width: 300,
+      width: 200,
       renderCell: (params) => `${params.row.options[0]}`,
     },
     {
       field: "optionB",
       headerName: "Option B",
-      width: 300,
+      width: 200,
       renderCell: (params) => `${params.row.options[1]}`,
     },
     {
       field: "optionC",
       headerName: "Option C",
-      width: 300,
+      width: 200,
       renderCell: (params) => `${params.row.options[2]}`,
     },
     {
       field: "optionD",
       headerName: "Option D",
-      width: 300,
+      width: 200,
       renderCell: (params) => `${params.row.options[3]}`,
     },
     {
       field: "correctAnswer",
       headerName: "Correct Answer",
-      width: 300,
+      width: 200,
       renderCell: (params) => `${params.row.correctAnswer}`,
     },
     {
