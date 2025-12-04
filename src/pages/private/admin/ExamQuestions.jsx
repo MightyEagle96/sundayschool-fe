@@ -223,44 +223,50 @@ function ExamQuestions() {
   return (
     <div>
       <div className="mt-5">
-        <div className="container">
-          <ApplicationNavigation
-            links={[{ path: "/admin/questionbanks", name: "Question Banks" }]}
-            pageTitle={title.toUpperCase()}
-          />
+        <div className="">
+          <div className="container">
+            <ApplicationNavigation
+              links={[{ path: "/admin/questionbanks", name: "Question Banks" }]}
+              pageTitle={title.toUpperCase()}
+            />
+          </div>
 
-          <div className="row">
-            <div className="col-lg-4">
-              <Button
-                onClick={() => {
-                  setClassCategory("adult");
-                  setShow(true);
-                }}
-              >
-                Add Questions for Adult class
-              </Button>
-              <Button
-                color="error"
-                onClick={() => {
-                  setClassCategory("yaya");
-                  setShow(true);
-                }}
-              >
-                Add Questions for YAYA class
-              </Button>
-            </div>
+          <div className="bg-light pt-4 pb-4">
+            <div className="container">
+              <div className="row">
+                <div className="col-lg-4 border-end">
+                  <Button
+                    onClick={() => {
+                      setClassCategory("adult");
+                      setShow(true);
+                    }}
+                  >
+                    Add Questions for Adult class
+                  </Button>
+                  <Button
+                    color="error"
+                    onClick={() => {
+                      setClassCategory("yaya");
+                      setShow(true);
+                    }}
+                  >
+                    Add Questions for YAYA class
+                  </Button>
+                </div>
 
-            <div className="col-lg-4">
-              <Typography variant="caption">
-                Upload a csv of excel file of the questions
-              </Typography>
-              <input
-                className="form-control"
-                type="file"
-                accept=".csv, .xlsx, .xls"
-                onChange={handleFile}
-                ref={fileRef}
-              />
+                <div className="col-lg-4 border-end">
+                  <Typography variant="caption">
+                    Upload a csv of excel file of the questions
+                  </Typography>
+                  <input
+                    className="form-control"
+                    type="file"
+                    accept=".csv, .xlsx, .xls"
+                    onChange={handleFile}
+                    ref={fileRef}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
