@@ -17,6 +17,7 @@ function QuestionBankPage() {
     const { data } = await httpService("examination/view");
 
     if (data) {
+      console.log(data);
       setExaminations(data);
     }
     setLoading(false);
@@ -30,17 +31,21 @@ function QuestionBankPage() {
     { field: "id", headerName: "S/N", width: 70 },
     { headerName: "Title", field: "title", width: 400 },
     {
-      headerName: "Yaya Questions",
-      field: "yayaQuestions",
+      headerName: "Total Questions",
+      field: "totalQuestions",
       width: 200,
-      renderCell: () => 10,
     },
     {
       headerName: "Adult Questions",
       field: "adultQuestions",
       width: 200,
-      renderCell: () => 15,
     },
+    {
+      headerName: "Yaya Questions",
+      field: "yayaQuestions",
+      width: 200,
+    },
+
     {
       headerName: "Action",
       field: "description",
