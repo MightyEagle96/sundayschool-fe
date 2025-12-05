@@ -143,39 +143,6 @@ function AdminSignup() {
                   ))}
                 </TextField>
               </div>
-              {/* <div className="mb-4">
-                <TextField
-                  label="Class Category"
-                  fullWidth
-                  select
-                  name="classCategory"
-                  value={userData.classCategory}
-                  onChange={handleUserData}
-                >
-                  {classes.map((c, i) => (
-                    <MenuItem key={i} value={c}>
-                      {c.toUpperCase()}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div className="mb-4">
-                <TextField
-                  disabled={!userData.classCategory}
-                  fullWidth
-                  label="Class Name"
-                  select
-                  name="className"
-                  value={userData.className}
-                  onChange={handleUserData}
-                >
-                  {classList.map((c, i) => (
-                    <MenuItem key={i} value={c}>
-                      {c.toUpperCase()}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>*/}
             </div>
 
             <div className="col-lg-6 mb-4">

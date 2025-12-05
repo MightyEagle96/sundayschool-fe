@@ -34,9 +34,25 @@ function CandidateLogin() {
 
   return (
     <div>
-      <div className="container mt-5 mb-5">
-        <div className="row  d-flex justify-content-center">
-          <div className="col-lg-4  ">
+      <div className="row m-0">
+        <div className="col-lg-6 homePage d-flex align-items-center">
+          <div className="p-5 text-white">
+            <img
+              src={logo}
+              alt="logo"
+              className="d-inline-block align-top me-2 mb-3"
+              height={100}
+            />
+            <Typography variant="h2" fontWeight={700}>
+              RCCG
+            </Typography>
+            <Typography variant="h5" fontWeight={300}>
+              New Life Assembly E-Exam Portal
+            </Typography>
+          </div>
+        </div>
+        <div className="col-lg-6 d-flex justify-content-center align-items-center">
+          <div className="col-lg-8">
             <div className="d-flex justify-content-center mb-3">
               <img
                 src={logo}
@@ -45,10 +61,16 @@ function CandidateLogin() {
                 height={70}
               />
             </div>
-            <div className="d-flex justify-content-center mb-5">
-              <Typography variant="h5" fontWeight={700}>
-                Candidate Login
-              </Typography>
+            <div className="text-center mb-5">
+              <div>
+                <Typography variant="h4" fontWeight={700} gutterBottom>
+                  Candidate Login
+                </Typography>
+                <Typography variant="body1">
+                  To login into your account as a candidate, please enter your
+                  email and password
+                </Typography>
+              </div>
             </div>
             <form onSubmit={loginCandidate}>
               <div className="mb-4">

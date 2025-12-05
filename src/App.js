@@ -6,6 +6,7 @@ import { AppUserProvider } from "./contexts/AppUserContext";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { CssBaseline } from "@mui/material";
+import "./App.css";
 
 function App() {
   return (

@@ -39,6 +39,10 @@ function NavbarComponent() {
       text: "Question Banks",
       path: "/admin/questionbanks",
     },
+    {
+      text: "Users",
+      path: "/admin/users",
+    },
   ];
 
   return (

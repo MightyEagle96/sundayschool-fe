@@ -16,6 +16,7 @@ import { Breadcrumbs, Stack, Typography } from "@mui/material";
 import { NavigateNext } from "@mui/icons-material";
 import { useAppUser } from "../contexts/AppUserContext";
 import ExamQuestions from "../pages/private/admin/ExamQuestions";
+import Users from "../pages/public/admin/Users";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -53,6 +54,10 @@ function MainRoutes() {
       path: "/admin/examquestions",
       component: <ExamQuestions />,
     },
+    {
+      path: "/admin/users",
+      component: <Users />,
+    },
   ];
 
   if (loading) {
@@ -61,7 +66,7 @@ function MainRoutes() {
   return (
     <BrowserRouter>
       <div style={{ minHeight: "80vh" }}>
-        <NavbarComponent />
+        {user && <NavbarComponent />}
         <Routes>
           {user ? (
             <>
@@ -80,7 +85,7 @@ function MainRoutes() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
-      <FooterComponents />
+      {user && <FooterComponents />}
     </BrowserRouter>
   );
 }
