@@ -46,14 +46,65 @@ function ExamQuestions() {
 
   const [deletingBank, setDeletingBank] = useState(false);
 
+  const [editing, setEditing] = useState(false);
+  const [editingData, setEditingData] = useState({
+    _id: "",
+    question: "",
+    optionA: "",
+    optionB: "",
+    optionC: "",
+    optionD: "",
+    correctAnswer: "",
+  });
+
   const fileRef = useRef();
 
   const title = params.get("title");
   const examination = params.get("examination");
 
-  /**
-   * Clean, non-mutating, dynamic addQuestion
-   */
+  const openEditModal = (row) => {
+    setEditingData({
+      _id: row._id,
+      question: row.question,
+      optionA: row.options[0],
+      optionB: row.options[1],
+      optionC: row.options[2],
+      optionD: row.options[3],
+      correctAnswer: row.correctAnswer,
+    });
+
+    setEditing(true);
+  };
+
+  const updateQuestion = async () => {
+    setLoading(true);
+    const { optionA, optionB, optionC, optionD, _id, ...rest } = editingData;
+
+    const body = {
+      ...rest,
+      options: [optionA, optionB, optionC, optionD],
+      examination,
+    };
+
+    const { data, error } = await httpService.put(
+      "/questionBank/update",
+      body,
+      { params: { questionId: _id, examination } }
+    );
+
+    if (data) {
+      toast.success(data);
+      getQuestions();
+      setEditing(false);
+    }
+
+    if (error) {
+      toast.error(error);
+    }
+
+    setLoading(false);
+  };
+
   const addQuestion = async () => {
     const { optionA, optionB, optionC, optionD, ...rest } = questionData;
 
@@ -156,7 +207,7 @@ function ExamQuestions() {
       headerName: "Edit",
       width: 100,
       renderCell: (params) => (
-        <IconButton>
+        <IconButton onClick={() => openEditModal(params.row)}>
           <Edit color="warning" />
         </IconButton>
       ),
@@ -583,6 +634,82 @@ function ExamQuestions() {
             </div>
           )}
         </Modal.Body>
+      </Modal>
+
+      <Modal size="xl" centered show={editing} onHide={() => setEditing(false)}>
+        <Modal.Header closeButton className="border-0 bg-light">
+          <Modal.Title>Edit Question</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <div>
+            {/* QUESTION */}
+            <TextField
+              multiline
+              maxRows={3}
+              fullWidth
+              label="Question"
+              value={editingData.question}
+              className="mb-4"
+              onChange={(e) =>
+                setEditingData({ ...editingData, question: e.target.value })
+              }
+            />
+
+            <div className="row">
+              {["A", "B", "C", "D"].map((letter) => (
+                <div className="col-lg-3 mb-3" key={letter}>
+                  <TextField
+                    fullWidth
+                    label={`Option ${letter}`}
+                    value={editingData[`option${letter}`]}
+                    onChange={(e) =>
+                      setEditingData((prev) => ({
+                        ...prev,
+                        [`option${letter}`]: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              ))}
+
+              {/* Correct Answer */}
+              <div className="col-lg-3 mb-3">
+                <TextField
+                  fullWidth
+                  label="Correct Answer"
+                  select
+                  value={editingData.correctAnswer}
+                  onChange={(e) =>
+                    setEditingData((prev) => ({
+                      ...prev,
+                      correctAnswer: e.target.value,
+                    }))
+                  }
+                >
+                  {["A", "B", "C", "D"].map((letter) => (
+                    <MenuItem
+                      key={letter}
+                      value={editingData[`option${letter}`]}
+                    >
+                      {editingData[`option${letter}`] || `Option ${letter}`}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            variant="contained"
+            onClick={updateQuestion}
+            loading={loading}
+          >
+            Save Changes
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );
