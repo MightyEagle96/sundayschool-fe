@@ -1,7 +1,14 @@
 import { Alert, Button, IconButton, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import {
+  Add,
+  CheckCircle,
+  Delete,
+  Edit,
+  Timelapse,
+  ToggleOff,
+} from "@mui/icons-material";
 import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
@@ -10,6 +17,7 @@ import { ApplicationNavigation } from "../../../routes/MainRoutes";
 
 function Examinations() {
   const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
   const [examination, setExamination] = useState("");
   const [loading, setLoading] = useState(false);
   const [examinations, setExaminations] = useState([]);
@@ -50,7 +58,31 @@ function Examinations() {
 
   const columns = [
     { field: "id", headerName: "S/N", width: 70 },
-    { headerName: "Title", field: "title", width: 400 },
+    {
+      headerName: "Title",
+      field: "title",
+      flex: 1,
+      renderCell: (params) => (
+        <div className="text-uppercase">
+          {params.row.title} <CheckCircle />
+        </div>
+      ),
+    },
+    {
+      headerName: "Duration",
+      field: "duration",
+      renderCell: (params) => (
+        <div>
+          <Button
+            onClick={() => setShow2(true)}
+            startIcon={<Timelapse />}
+            sx={{ textTransform: "lowercase" }}
+          >
+            {params.row.duration} mins
+          </Button>
+        </div>
+      ),
+    },
     {
       headerName: "Edit",
       field: "edit",
@@ -64,6 +96,23 @@ function Examinations() {
             }}
           >
             <Edit />
+          </IconButton>
+        );
+      },
+    },
+    {
+      headerName: "Activate",
+      field: "_id",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <IconButton
+            color="success"
+            onClick={() => {
+              toggleExamination(params.row._id);
+            }}
+          >
+            <ToggleOff />
           </IconButton>
         );
       },
@@ -87,6 +136,30 @@ function Examinations() {
     },
   ];
 
+  const toggleExamination = (id) => {
+    Swal.fire({
+      icon: "question",
+      title: "Toggle Examination",
+      text: "Are you sure you want to toggle this examination? This will make it accessible for the candidates",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { data, error } = await httpService.get("examination/toggle", {
+          params: { id },
+        });
+
+        if (data) {
+          toast.success(data);
+          getData();
+        }
+
+        if (error) {
+          toast.error(error);
+        }
+      }
+    });
+  };
+
   const editData = (data) => {
     setExamination(data.title);
     setExaminationId(data._id);
@@ -97,6 +170,8 @@ function Examinations() {
     const { data } = await httpService("examination/view");
 
     if (data) {
+      console.log(data);
+
       setExaminations(data);
     }
     setLoading(false);
@@ -190,6 +265,12 @@ function Examinations() {
             Cancel
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      <Modal show={show2} onHide={() => setShow2(false)}>
+        <Modal.Header>
+          <Modal.Title>Examination Duration</Modal.Title>
+        </Modal.Header>
       </Modal>
     </div>
   );

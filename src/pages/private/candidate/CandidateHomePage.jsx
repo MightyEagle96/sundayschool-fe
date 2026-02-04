@@ -1,7 +1,154 @@
-import React from "react";
+import { Avatar, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { useAppUser } from "../../../contexts/AppUserContext";
+import { httpService } from "../../../httpService";
+import { useEffect } from "react";
 
 function CandidateHomePage() {
-  return <div>CandidateHomePage</div>;
+  const { user } = useAppUser();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const getActiveExamination = async () => {
+    const { data, error } = await httpService.get(
+      "examination/viewactiveexamination",
+    );
+
+    if (data) {
+      console.log(data);
+    }
+
+    if (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getActiveExamination();
+  }, []);
+  return (
+    <div>
+      {user && (
+        <div>
+          <div className="container mt-5 mb-5">
+            <div
+              className="bg-light rounded d-flex align-items-center"
+              style={{ minHeight: isMobile ? "auto" : "30vh" }}
+            >
+              <div className="w-100 p-4">
+                <div className="row align-items-center text-center text-md-start">
+                  {/* Avatar */}
+                  <div
+                    className={`col-lg-3 col-md-4 d-flex justify-content-center ${
+                      !isMobile ? "border-end" : ""
+                    } mb-3 mb-md-0`}
+                  >
+                    <Avatar
+                      {...stringAvatar(user.firstName + " " + user.lastName)}
+                      sx={{
+                        width: isMobile ? 70 : 100,
+                        height: isMobile ? 70 : 100,
+                        fontSize: isMobile ? 28 : 40,
+                        textTransform: "uppercase",
+                      }}
+                    />
+                  </div>
+
+                  {/* Welcome Text */}
+                  <div className="col-lg-9 col-md-8 d-flex align-items-center justify-content-center justify-content-md-start">
+                    <div>
+                      <Typography
+                        variant={isMobile ? "h6" : "h4"}
+                        fontWeight={300}
+                        gutterBottom
+                      >
+                        Welcome back,&nbsp;
+                        <span className="text-uppercase fw-bold">
+                          {user.firstName} {user.lastName}
+                        </span>
+                      </Typography>
+                      <Typography
+                        gutterBottom
+                        variant={isMobile ? "body2" : "body1"}
+                      >
+                        Class Category:{" "}
+                        <span className="fw-bold text-uppercase">
+                          {user.classCategory}
+                        </span>
+                      </Typography>
+                      <Typography
+                        gutterBottom
+                        variant={isMobile ? "body2" : "body1"}
+                      >
+                        Class Name:{" "}
+                        <span className="fw-bold text-uppercase">
+                          {user.className}
+                        </span>
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="container">
+            <div className="row m-0">
+              <div className="col-lg-3 p-3">
+                <Typography>Hello</Typography>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default CandidateHomePage;
+
+function stringToColor(string) {
+  if (!string) {
+    return "#ff971d";
+  }
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  if (!name || typeof name !== "string") {
+    return {
+      sx: {
+        bgcolor: "#ff971d",
+      },
+      children: "U",
+    };
+  }
+
+  const parts = name.trim().split(" ");
+
+  const firstInitial = parts[0]?.[0] || "";
+  const secondInitial = parts[1]?.[0] || "";
+
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${firstInitial}${secondInitial}` || "U",
+  };
+}

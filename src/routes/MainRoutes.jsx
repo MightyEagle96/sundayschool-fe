@@ -55,7 +55,7 @@ function MainRoutes() {
       component: <ExamQuestions />,
     },
     {
-      path: "/admin/users",
+      path: "/admin/candidates",
       component: <Users />,
     },
   ];

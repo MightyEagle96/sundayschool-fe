@@ -3,7 +3,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { appColors } from "../assets/appTheme";
 import { Button, Typography } from "@mui/material";
 import { useAppUser } from "../contexts/AppUserContext";
-import { Login, Logout } from "@mui/icons-material";
+import { Logout } from "@mui/icons-material";
 import { httpService } from "../httpService";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ function NavbarComponent() {
     }
   };
 
-  const links = [
+  const adminLinks = [
     {
       text: "Home",
       path: "/admin",
@@ -40,11 +40,25 @@ function NavbarComponent() {
       path: "/admin/questionbanks",
     },
     {
-      text: "Users",
-      path: "/admin/users",
+      text: "Candidates",
+      path: "/admin/candidates",
     },
   ];
 
+  const studentLinks = [
+    {
+      text: "Home",
+      path: "/",
+    },
+    {
+      text: "Examinations",
+      path: "/examinations",
+    },
+    {
+      text: "Question Banks",
+      path: "/questionbanks",
+    },
+  ];
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -75,11 +89,28 @@ function NavbarComponent() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            {links.map((c, i) => (
-              <Nav.Link key={i} as={Link} to={c.path}>
-                <Typography variant="body2">{c.text}</Typography>
-              </Nav.Link>
-            ))}
+            {user.role === "student" &&
+              studentLinks.map((link) => (
+                <Nav.Link
+                  as={Link}
+                  to={link.path}
+                  key={link.text}
+                  //style={{ textTransform: "capitalize" }}
+                >
+                  {link.text}
+                </Nav.Link>
+              ))}
+            {user.role === "teacher" &&
+              adminLinks.map((link) => (
+                <Nav.Link
+                  as={Link}
+                  to={link.path}
+                  key={link.text}
+                  //style={{ textTransform: "capitalize" }}
+                >
+                  {link.text}
+                </Nav.Link>
+              ))}
           </Nav>
           <Nav className="ms-auto">
             {user ? (
