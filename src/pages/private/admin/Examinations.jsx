@@ -222,6 +222,7 @@ function Examinations() {
       cancelButtonText: "No",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        setLoading(true);
         const { data, error } = await httpService.patch(
           "examination/updateduration",
           {
@@ -240,6 +241,8 @@ function Examinations() {
 
         setShow2(false);
         setExamIdinfocus("");
+
+        setLoading(false);
       }
     });
   };
@@ -322,7 +325,9 @@ function Examinations() {
           />
         </Modal.Body>
         <Modal.Footer className="border-0 bg-light">
-          <Button onClick={updateDuration}>Update</Button>
+          <Button onClick={updateDuration} loading={loading}>
+            Update
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
