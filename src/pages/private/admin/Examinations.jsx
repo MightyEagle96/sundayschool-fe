@@ -1,4 +1,10 @@
-import { Alert, Button, IconButton, TextField } from "@mui/material";
+import {
+  Alert,
+  Button,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import {
@@ -22,6 +28,8 @@ function Examinations() {
   const [loading, setLoading] = useState(false);
   const [examinations, setExaminations] = useState([]);
   const [examinationId, setExaminationId] = useState("");
+  const [duration, setDuration] = useState(0);
+  const [examIdinFocus, setExamIdinfocus] = useState(0);
 
   const createExamination = () => {
     Swal.fire({
@@ -74,7 +82,10 @@ function Examinations() {
       renderCell: (params) => (
         <div>
           <Button
-            onClick={() => setShow2(true)}
+            onClick={() => {
+              setShow2(true);
+              setExamIdinfocus(params.row._id);
+            }}
             startIcon={<Timelapse />}
             sx={{ textTransform: "lowercase" }}
           >
@@ -170,8 +181,6 @@ function Examinations() {
     const { data } = await httpService("examination/view");
 
     if (data) {
-      console.log(data);
-
       setExaminations(data);
     }
     setLoading(false);
@@ -200,6 +209,37 @@ function Examinations() {
         if (error) {
           toast.error(error);
         }
+      }
+    });
+  };
+
+  const updateDuration = () => {
+    Swal.fire({
+      icon: "question",
+      title: "Update Duration",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { data, error } = await httpService.patch(
+          "examination/updateduration",
+          {
+            duration,
+          },
+          { params: { id: examIdinFocus } },
+        );
+
+        if (data) {
+          getData();
+          toast.success(data);
+        }
+        if (error) {
+          toast.error(error);
+        }
+
+        setShow2(false);
+        setExamIdinfocus("");
       }
     });
   };
@@ -267,10 +307,23 @@ function Examinations() {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={show2} onHide={() => setShow2(false)}>
-        <Modal.Header>
-          <Modal.Title>Examination Duration</Modal.Title>
+      <Modal centered show={show2} onHide={() => setShow2(false)}>
+        <Modal.Header closeButton className="border-0 bg-light">
+          <Modal.Title>
+            <Typography>Update duration</Typography>
+          </Modal.Title>
         </Modal.Header>
+        <Modal.Body>
+          <TextField
+            label="Duration"
+            type="number"
+            onChange={(e) => setDuration(e.target.value)}
+            helperText="In minutes"
+          />
+        </Modal.Body>
+        <Modal.Footer className="border-0 bg-light">
+          <Button onClick={updateDuration}>Update</Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );
