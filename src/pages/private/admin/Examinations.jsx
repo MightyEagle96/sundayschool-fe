@@ -10,6 +10,7 @@ import { Modal } from "react-bootstrap";
 import {
   Add,
   CheckCircle,
+  Clear,
   Delete,
   Edit,
   Timelapse,
@@ -71,8 +72,19 @@ function Examinations() {
       field: "title",
       flex: 1,
       renderCell: (params) => (
-        <div className="text-uppercase">
-          {params.row.title} <CheckCircle />
+        <div className="text-uppercase">{params.row.title}</div>
+      ),
+    },
+    {
+      headerName: "Active Status",
+      field: "active",
+      renderCell: (params) => (
+        <div>
+          {params.row.active ? (
+            <CheckCircle color="success" />
+          ) : (
+            <Clear color="error" />
+          )}
         </div>
       ),
     },
@@ -155,9 +167,12 @@ function Examinations() {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const { data, error } = await httpService.get("examination/toggle", {
-          params: { id },
-        });
+        const { data, error } = await httpService.get(
+          "examination/toggleactivation",
+          {
+            params: { id },
+          },
+        );
 
         if (data) {
           toast.success(data);
@@ -181,6 +196,7 @@ function Examinations() {
     const { data } = await httpService("examination/view");
 
     if (data) {
+      console.log(data);
       setExaminations(data);
     }
     setLoading(false);
