@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Link, Route, Router, Routes } from "react-router-dom";
 import CandidateLogin from "../pages/public/candidate/CandidateLogin";
 import AdminLogin from "../pages/public/admin/AdminLogin";
@@ -17,6 +16,9 @@ import { NavigateNext } from "@mui/icons-material";
 import { useAppUser } from "../contexts/AppUserContext";
 import ExamQuestions from "../pages/private/admin/ExamQuestions";
 import Users from "../pages/public/admin/Users";
+import ExaminationPage from "../pages/private/candidate/ExaminationPage";
+import TakeExamination from "../pages/private/candidate/TakeExamination";
+import ExaminationConcluded from "../pages/private/candidate/ExaminationConcluded";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -33,11 +35,19 @@ function MainRoutes() {
     },
   ];
 
-  const privateRoutes = [
+  const candidateRoutes = [
     {
       path: "/",
       component: <CandidateHomePage />,
     },
+
+    { path: "/examination", component: <ExaminationPage /> },
+    { path: "/takeexamination", component: <TakeExamination /> },
+    { path: "/examinationconcluded", component: <ExaminationConcluded /> },
+    { path: "*", component: <NotFound /> },
+  ];
+
+  const adminRoutes = [
     {
       path: "/admin",
       component: <AdminHomePage />,
@@ -58,11 +68,15 @@ function MainRoutes() {
       path: "/admin/candidates",
       component: <Users />,
     },
+    { path: "*", component: <NotFound /> },
   ];
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  const privateRoutes =
+    user?.role === "student" ? candidateRoutes : adminRoutes;
   return (
     <BrowserRouter>
       <div style={{ minHeight: "80vh" }}>

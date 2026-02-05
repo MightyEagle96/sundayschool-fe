@@ -50,14 +50,14 @@ function NavbarComponent() {
       text: "Home",
       path: "/",
     },
-    {
-      text: "Examinations",
-      path: "/examinations",
-    },
-    {
-      text: "Question Banks",
-      path: "/questionbanks",
-    },
+    // {
+    //   text: "Examinations",
+    //   path: "/examinations",
+    // },
+    // {
+    //   text: "Question Banks",
+    //   path: "/questionbanks",
+    // },
   ];
   return (
     <Navbar expand="lg" className="bg-body-tertiary">

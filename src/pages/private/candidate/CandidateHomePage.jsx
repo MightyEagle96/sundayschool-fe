@@ -1,10 +1,21 @@
-import { Avatar, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Avatar,
+  Button,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useAppUser } from "../../../contexts/AppUserContext";
 import { httpService } from "../../../httpService";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ArrowRight } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 function CandidateHomePage() {
   const { user } = useAppUser();
+  const [activeExamination, setActiveExamination] = useState(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -15,7 +26,7 @@ function CandidateHomePage() {
     );
 
     if (data) {
-      console.log(data);
+      setActiveExamination(data);
     }
 
     if (error) {
@@ -67,24 +78,6 @@ function CandidateHomePage() {
                           {user.firstName} {user.lastName}
                         </span>
                       </Typography>
-                      <Typography
-                        gutterBottom
-                        variant={isMobile ? "body2" : "body1"}
-                      >
-                        Class Category:{" "}
-                        <span className="fw-bold text-uppercase">
-                          {user.classCategory}
-                        </span>
-                      </Typography>
-                      <Typography
-                        gutterBottom
-                        variant={isMobile ? "body2" : "body1"}
-                      >
-                        Class Name:{" "}
-                        <span className="fw-bold text-uppercase">
-                          {user.className}
-                        </span>
-                      </Typography>
                     </div>
                   </div>
                 </div>
@@ -92,12 +85,39 @@ function CandidateHomePage() {
             </div>
           </div>
 
-          <div className="container">
-            <div className="row m-0">
-              <div className="col-lg-3 p-3">
-                <Typography>Hello</Typography>
+          <div className="container mb-5">
+            {activeExamination ? (
+              <div className="col-lg-4">
+                <Alert severity="success">
+                  <AlertTitle>Active Examination</AlertTitle>
+                  <Typography
+                    fontWeight={700}
+                    variant="body2"
+                    textTransform={"uppercase"}
+                  >
+                    {activeExamination.title}
+                  </Typography>
+                  <div className="text-end">
+                    <Button
+                      sx={{ textTransform: "capitalize" }}
+                      endIcon={<ArrowRight />}
+                      component={Link}
+                      to={`/examination?examination=${activeExamination._id}`}
+                    >
+                      <Typography variant="caption">Proceed</Typography>
+                    </Button>
+                  </div>
+                </Alert>
               </div>
-            </div>
+            ) : (
+              <div className="col-lg-4">
+                <Alert severity="error">
+                  <AlertTitle>No active examination</AlertTitle>
+                  There is no active examination at this time or the current
+                  examination hasn't been activated by the admin.
+                </Alert>
+              </div>
+            )}
           </div>
         </div>
       )}
