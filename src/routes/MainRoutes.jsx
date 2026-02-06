@@ -84,7 +84,7 @@ function MainRoutes() {
   return (
     <BrowserRouter>
       <div style={{ minHeight: "80vh" }}>
-        {user && <NavbarComponent />}
+        <NavbarComponent />
         <Routes>
           {user ? (
             <>
