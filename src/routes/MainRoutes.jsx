@@ -19,6 +19,8 @@ import Users from "../pages/public/admin/Users";
 import ExaminationPage from "../pages/private/candidate/ExaminationPage";
 import TakeExamination from "../pages/private/candidate/TakeExamination";
 import ExaminationConcluded from "../pages/private/candidate/ExaminationConcluded";
+import ExaminationScore from "../pages/private/candidate/ExaminationScore";
+import ExamTranscript from "../pages/private/candidate/ExamTranscript";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -44,6 +46,8 @@ function MainRoutes() {
     { path: "/examination", component: <ExaminationPage /> },
     { path: "/takeexamination", component: <TakeExamination /> },
     { path: "/examinationconcluded", component: <ExaminationConcluded /> },
+    { path: "/examinationscore", component: <ExaminationScore /> },
+    { path: "/examtranscript", component: <ExamTranscript /> },
     { path: "*", component: <NotFound /> },
   ];
 

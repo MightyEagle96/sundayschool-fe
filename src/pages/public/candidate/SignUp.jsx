@@ -74,7 +74,7 @@ function SignUp() {
         if (result.isConfirmed) {
           const { data, error } = await httpService.post(
             "auth/register",
-            userData
+            userData,
           );
 
           if (data) {

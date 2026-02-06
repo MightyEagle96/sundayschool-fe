@@ -98,14 +98,25 @@ function CandidateHomePage() {
                     {activeExamination.title}
                   </Typography>
                   <div className="text-end">
-                    <Button
-                      sx={{ textTransform: "capitalize" }}
-                      endIcon={<ArrowRight />}
-                      component={Link}
-                      to={`/examination?examination=${activeExamination._id}`}
-                    >
-                      <Typography variant="caption">Proceed</Typography>
-                    </Button>
+                    {activeExamination.hasTakenThisExamination ? (
+                      <Button
+                        sx={{ textTransform: "capitalize" }}
+                        endIcon={<ArrowRight />}
+                        component={Link}
+                        to={"/examinationscore"}
+                      >
+                        <Typography variant="caption">View Score</Typography>
+                      </Button>
+                    ) : (
+                      <Button
+                        sx={{ textTransform: "capitalize" }}
+                        endIcon={<ArrowRight />}
+                        component={Link}
+                        to={`/examination?examination=${activeExamination._id}`}
+                      >
+                        <Typography variant="caption">Proceed</Typography>
+                      </Button>
+                    )}
                   </div>
                 </Alert>
               </div>
