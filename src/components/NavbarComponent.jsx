@@ -45,13 +45,33 @@ function NavbarComponent() {
     { text: "Candidates", path: "/admin/candidates" },
   ];
 
+  const teacherLinks = [
+    { text: "Home", path: "/teacher" },
+    { text: "Examinations", path: "/teacher/examinations" },
+    { text: "Attendance", path: "/teacher/attendance" },
+  ];
+
   const studentLinks = [
     { text: "Home", path: "/" },
     { text: "Examination Score", path: "/examinationscore" },
   ];
 
-  const navLinks = user?.role === "teacher" ? adminLinks : studentLinks;
+  function switchNavLinks(role) {
+    switch (role) {
+      case "teacher":
+        return teacherLinks;
+      case "admin":
+        return adminLinks;
+      case "student":
+        return studentLinks;
+      default:
+        return studentLinks;
+    }
+  }
 
+  // const navLinks = user?.role === "teacher" ? adminLinks : studentLinks;
+
+  const navLinks = switchNavLinks(user?.role);
   return (
     <>
       <AppBar position="sticky" elevation={2} sx={{ bgcolor: "white" }}>
@@ -97,15 +117,6 @@ function NavbarComponent() {
           {/* RIGHT SIDE */}
           <Box display="flex" alignItems="center" gap={2}>
             {user ? (
-              // <Button
-              //   onClick={handleLogout}
-              //   color="error"
-              //   endIcon={<LogoutIcon />}
-              //   disabled={loading}
-              //   sx={{ textTransform: "capitalize" }}
-              // >
-              //   Logout
-              // </Button>
               <Button
                 onClick={handleLogout}
                 color="error"
@@ -123,9 +134,9 @@ function NavbarComponent() {
                 <Button component={Link} to="/">
                   Login
                 </Button>
-                <Button component={Link} to="/admin">
+                {/* <Button component={Link} to="/admin">
                   Admin Login
-                </Button>
+                </Button> */}
               </Stack>
             )}
 
@@ -186,9 +197,9 @@ function NavbarComponent() {
                 <Button component={Link} to="/">
                   Login
                 </Button>
-                <Button component={Link} to="/admin">
+                {/* <Button component={Link} to="/admin">
                   Admin Login
-                </Button>
+                </Button> */}
               </Stack>
             )}
           </Box>

@@ -138,7 +138,7 @@ function CandidateHomePage() {
 
 export default CandidateHomePage;
 
-function stringToColor(string) {
+export function stringToColor(string) {
   if (!string) {
     return "#ff971d";
   }
@@ -161,7 +161,7 @@ function stringToColor(string) {
   return color;
 }
 
-function stringAvatar(name) {
+export function stringAvatar(name) {
   if (!name || typeof name !== "string") {
     return {
       sx: {

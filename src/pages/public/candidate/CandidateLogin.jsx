@@ -193,12 +193,13 @@ function CandidateLogin() {
           <Typography fontWeight={700} mt={1}>
             RCCG – New Life Assembly
           </Typography>
+          <Typography color="error">E-Sunday School</Typography>
         </Box>
 
         {/* HEADER */}
         <Box textAlign="center" mb={4}>
           <Typography variant="h5" fontWeight={700}>
-            Candidate Login
+            Student Login
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Enter your email and password to continue
@@ -254,12 +255,20 @@ function CandidateLogin() {
 
           {/* SIGNUP */}
           <Box mt={3} textAlign="center">
-            <Typography variant="body2">
+            <Typography variant="body2" gutterBottom>
               <Link
                 to="/signup"
                 style={{ color: "#198754", textDecoration: "none" }}
               >
                 Don&apos;t have an account? Sign up
+              </Link>
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              <Link
+                to="/teacher"
+                style={{ color: "GrayText", textDecoration: "none" }}
+              >
+                Login as a teacher
               </Link>
             </Typography>
           </Box>

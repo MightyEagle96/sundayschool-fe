@@ -21,6 +21,9 @@ import TakeExamination from "../pages/private/candidate/TakeExamination";
 import ExaminationConcluded from "../pages/private/candidate/ExaminationConcluded";
 import ExaminationScore from "../pages/private/candidate/ExaminationScore";
 import ExamTranscript from "../pages/private/candidate/ExamTranscript";
+import TeacherLogin from "../pages/public/teacher/TeacherLogin";
+import TeacherSignup from "../pages/public/teacher/TeacherSignup";
+import TeacherHomePage from "../pages/private/teacher/TeacherHomePage";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -35,6 +38,8 @@ function MainRoutes() {
       path: "/admin/signup",
       component: <AdminSignup />,
     },
+    { path: "/teacher", component: <TeacherLogin /> },
+    { path: "/teacher/signup", component: <TeacherSignup /> },
   ];
 
   const candidateRoutes = [
@@ -75,12 +80,31 @@ function MainRoutes() {
     { path: "*", component: <NotFound /> },
   ];
 
+  const teacherRoutes = [{ path: "/teacher", component: <TeacherHomePage /> }];
+
+  // const teacherRoutes = [{ path: "/teacher", component: <TeacherLogin /> }];
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  const privateRoutes =
-    user?.role === "student" ? candidateRoutes : adminRoutes;
+  // const privateRoutes =
+  //   user?.role === "student" ? candidateRoutes : adminRoutes;
+
+  function showRoutes(role) {
+    switch (role) {
+      case "student":
+        return candidateRoutes;
+      case "teacher":
+        return teacherRoutes;
+
+      case "admin":
+        return adminRoutes;
+      default:
+        return candidateRoutes;
+    }
+  }
+
   return (
     <BrowserRouter>
       <div style={{ minHeight: "80vh" }}>
@@ -88,7 +112,7 @@ function MainRoutes() {
         <Routes>
           {user ? (
             <>
-              {privateRoutes.map((route, i) => (
+              {showRoutes(user.role).map((route, i) => (
                 <Route key={i} path={route.path} element={route.component} />
               ))}
             </>
