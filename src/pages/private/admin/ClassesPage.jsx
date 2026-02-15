@@ -4,6 +4,7 @@ import { Button, MenuItem, TextField, Typography } from "@mui/material";
 import Swal from "sweetalert2";
 import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
+import { Add } from "@mui/icons-material";
 
 function ClassesPage() {
   const classes = ["Adult", "YAYA"];
@@ -78,6 +79,8 @@ function ClassesPage() {
               </div>
               <div>
                 <Button
+                  endIcon={<Add />}
+                  loadingPosition="end"
                   loading={loading}
                   fullWidth
                   variant="contained"
