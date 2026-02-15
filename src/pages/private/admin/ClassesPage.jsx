@@ -1,6 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ApplicationNavigation } from "../../../routes/MainRoutes";
-import { Button, MenuItem, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Swal from "sweetalert2";
 import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
@@ -11,6 +19,9 @@ function ClassesPage() {
 
   const [classData, setClassData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [classCategory, setClassCategory] = useState("");
+  const [creatingCategory, setCreatingCategory] = useState(false);
+  const [categories, setClassCategories] = useState([]);
 
   const createData = (e) => {
     e.preventDefault();
@@ -41,16 +52,86 @@ function ClassesPage() {
   const handleChange = (e) => {
     setClassData({ ...classData, [e.target.name]: e.target.value });
   };
+
+  const addClassCategory = () => {
+    Swal.fire({
+      icon: "question",
+      title: "Class Category",
+      text: "Are you sure you want to create this class category",
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setCreatingCategory(true);
+        const { data, error } = await httpService.post(
+          "/admin/addclasscategory",
+          { name: classCategory },
+        );
+
+        if (data) {
+          toast.success(data);
+          retrieveCategories();
+        }
+        if (error) {
+          toast.error(error);
+        }
+        setCreatingCategory(false);
+      }
+    });
+  };
+
+  const retrieveCategories = async () => {
+    setCreatingCategory(true);
+    const { data, error } = await httpService.get("/admin/classcategories");
+
+    if (data) {
+      setClassCategories(data);
+      console.log(data);
+    }
+    setCreatingCategory(false);
+  };
+
+  useEffect(() => {
+    retrieveCategories();
+  }, []);
   return (
     <div>
       <div className="my-5 container">
         <ApplicationNavigation links={[]} pageTitle={"Classes"} />
 
         <div className="mt-5">
-          <div className="text-muted mb-3">
-            <Typography variant="h4" fontWeight={700}>
-              Classes
-            </Typography>
+          <div className="text-muted mb-5">
+            <div className="row">
+              <div className="col-lg-3">
+                <Typography variant="h4" fontWeight={700}>
+                  Classes
+                </Typography>
+              </div>
+              <div className="col-lg-3">
+                <TextField
+                  label="Add category"
+                  fullWidth
+                  onChange={(e) => setClassCategory(e.target.value)}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={creatingCategory || !classCategory}
+                            onClick={addClassCategory}
+                          >
+                            {creatingCategory ? (
+                              <CircularProgress size={15} />
+                            ) : (
+                              <Add />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                />
+              </div>
+            </div>
           </div>
           <div className="col-lg-4">
             <form onSubmit={createData}>
@@ -61,10 +142,11 @@ function ClassesPage() {
                   fullWidth
                   select
                   label="Class Category"
+                  //className="text-upp"
                 >
-                  {classes.map((c, i) => (
-                    <MenuItem value={c} key={i}>
-                      {c}
+                  {categories.map((c, i) => (
+                    <MenuItem className="text-uppercase" value={c._id} key={i}>
+                      {c.name}
                     </MenuItem>
                   ))}
                 </TextField>
