@@ -43,6 +43,7 @@ function NavbarComponent() {
     { text: "Examinations", path: "/admin/examinations" },
     { text: "Question Banks", path: "/admin/questionbanks" },
     { text: "Candidates", path: "/admin/candidates" },
+    { text: "Classes", path: "/admin/classes" },
   ];
 
   const teacherLinks = [

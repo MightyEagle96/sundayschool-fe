@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { httpService } from "../../../httpService";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Login } from "@mui/icons-material";
 
 function AdminSignup() {
   const [userData, setUserData] = useState({
@@ -175,8 +176,14 @@ function AdminSignup() {
 
           <div className="mb-4 text-center">
             <div>
-              <Button type="submit" variant="contained" disabled={loading}>
-                {loading ? "Creating..." : "Create Account"}
+              <Button
+                type="submit"
+                variant="contained"
+                loading={loading}
+                loadingPosition="end"
+                endIcon={<Login />}
+              >
+                create account
               </Button>
             </div>
 
