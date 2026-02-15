@@ -1,15 +1,11 @@
 import React, { useState } from "react";
-import { Button, MenuItem, TextField, Typography } from "@mui/material";
-import { adultClasses, yayaClasses } from "../../../utils";
+import { Button, TextField, Typography } from "@mui/material";
 import Swal from "sweetalert2";
 import { httpService } from "../../../httpService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function AdminSignup() {
-  const classes = ["adult", "yaya"];
-  const genders = ["male", "female"];
-
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -73,8 +69,8 @@ function AdminSignup() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           const { data, error } = await httpService.post(
-            "auth/teacher/register",
-            userData
+            "auth/admin/signup",
+            userData,
           );
 
           if (data) {
@@ -93,17 +89,12 @@ function AdminSignup() {
     }
   };
 
-  let classList =
-    userData.classCategory && userData.classCategory === "adult"
-      ? adultClasses
-      : yayaClasses;
-
   return (
     <div>
       <div className="container mt-5 mb-5">
         <div className="mb-4">
           <Typography variant="h5" fontWeight={700}>
-            Create your sunday school teacher account
+            Create admin account
           </Typography>
         </div>
 
@@ -131,24 +122,6 @@ function AdminSignup() {
               <div className="mb-4">
                 <TextField
                   fullWidth
-                  label="Gender"
-                  select
-                  name="gender"
-                  onChange={handleUserData}
-                >
-                  {genders.map((c, i) => (
-                    <MenuItem key={i} value={c}>
-                      {c}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-            </div>
-
-            <div className="col-lg-6 mb-4">
-              <div className="mb-4">
-                <TextField
-                  fullWidth
                   label="Email"
                   type="email"
                   name="email"
@@ -158,6 +131,9 @@ function AdminSignup() {
                   helperText={errors.email}
                 />
               </div>
+            </div>
+
+            <div className="col-lg-6 mb-4">
               <div className="mb-4">
                 <TextField
                   fullWidth
@@ -198,9 +174,22 @@ function AdminSignup() {
           </div>
 
           <div className="mb-4 text-center">
-            <Button type="submit" variant="contained" disabled={loading}>
-              {loading ? "Creating..." : "Create Account"}
-            </Button>
+            <div>
+              <Button type="submit" variant="contained" disabled={loading}>
+                {loading ? "Creating..." : "Create Account"}
+              </Button>
+            </div>
+
+            <div className="mt-3">
+              <Typography
+                component={Link}
+                sx={{ textDecoration: "none" }}
+                to="/admin"
+                color="graytext"
+              >
+                Already have an account? Login
+              </Typography>
+            </div>
           </div>
         </form>
       </div>

@@ -24,9 +24,11 @@ import ExamTranscript from "../pages/private/candidate/ExamTranscript";
 import TeacherLogin from "../pages/public/teacher/TeacherLogin";
 import TeacherSignup from "../pages/public/teacher/TeacherSignup";
 import TeacherHomePage from "../pages/private/teacher/TeacherHomePage";
+import ClassesPage from "../pages/private/admin/ClassesPage";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
+
   const publicRoutes = [
     { path: "/", component: <CandidateLogin /> },
     { path: "/signup", component: <SignUp /> },
@@ -77,6 +79,7 @@ function MainRoutes() {
       path: "/admin/candidates",
       component: <Users />,
     },
+    { path: "/admin/classes", component: <ClassesPage /> },
     { path: "*", component: <NotFound /> },
   ];
 

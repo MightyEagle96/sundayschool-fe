@@ -22,8 +22,8 @@ function AdminLogin() {
     setLoading(true);
 
     const { data, error } = await httpService.post(
-      "/auth/teacher/login",
-      candidate
+      "/auth/admin/login",
+      candidate,
     );
     if (data) {
       window.location.href = "/admin";
