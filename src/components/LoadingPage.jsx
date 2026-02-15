@@ -14,7 +14,7 @@ function LoadingPage() {
     >
       <div className="text-center floating-logo">
         <div className="d-flex justify-content-center">
-          <Avatar src={logo} />
+          <Avatar src={logo} sx={{ height: 100, width: 100 }} />
         </div>
 
         <div className="mt-2">
