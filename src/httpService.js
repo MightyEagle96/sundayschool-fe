@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const baseURL =
   process.env.NODE_ENV === "production"
-    ? "https://promotion.fedcivilservice.gov.ng/api"
+    ? "https://https://nla-sundayschool-be.onrender.com/api"
     : //
       "http://localhost:4000/api";
 
@@ -18,7 +18,7 @@ httpService.interceptors.request.use(
     // you can add custom headers here if needed
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 let isRefreshing = false;
 let failedQueue = [];
@@ -80,7 +80,7 @@ httpService.interceptors.response.use(
       return { error: error.response.data, status: error.response.status };
     }
     return { error: "Network connection lost" };
-  }
+  },
 );
 
 export { httpService };
