@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import { ApplicationNavigation } from "../../../routes/MainRoutes";
 import { Button, MenuItem, TextField, Typography } from "@mui/material";
 import Swal from "sweetalert2";
+import { httpService } from "../../../httpService";
+import { toast } from "react-toastify";
 
 function ClassesPage() {
   const classes = ["Adult", "YAYA"];
 
-  const [classData] = useState({});
+  const [classData, setClassData] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const createData = () => {
+  const createData = (e) => {
+    e.preventDefault();
     Swal.fire({
       icon: "question",
       title: "Create Class",
@@ -16,8 +20,25 @@ function ClassesPage() {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
+        setLoading(true);
+        const { data, error } = await httpService.post(
+          "admin/createclass",
+          classData,
+        );
+
+        if (data) {
+          toast.success(data);
+        }
+        if (error) {
+          toast.error(error);
+        }
+        setLoading(false);
       }
     });
+  };
+
+  const handleChange = (e) => {
+    setClassData({ ...classData, [e.target.name]: e.target.value });
   };
   return (
     <div>
@@ -31,9 +52,15 @@ function ClassesPage() {
             </Typography>
           </div>
           <div className="col-lg-4">
-            <form>
+            <form onSubmit={createData}>
               <div className="mb-3">
-                <TextField fullWidth select label="Class Category">
+                <TextField
+                  name="classCategory"
+                  onChange={handleChange}
+                  fullWidth
+                  select
+                  label="Class Category"
+                >
                   {classes.map((c, i) => (
                     <MenuItem value={c} key={i}>
                       {c}
@@ -42,10 +69,20 @@ function ClassesPage() {
                 </TextField>
               </div>
               <div className="mb-3">
-                <TextField fullWidth label="Class Name" />
+                <TextField
+                  name="name"
+                  onChange={handleChange}
+                  fullWidth
+                  label="Class Name"
+                />
               </div>
               <div>
-                <Button fullWidth variant="contained" type="submit">
+                <Button
+                  loading={loading}
+                  fullWidth
+                  variant="contained"
+                  type="submit"
+                >
                   Add Class
                 </Button>
               </div>
