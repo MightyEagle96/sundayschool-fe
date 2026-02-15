@@ -25,6 +25,7 @@ import TeacherLogin from "../pages/public/teacher/TeacherLogin";
 import TeacherSignup from "../pages/public/teacher/TeacherSignup";
 import TeacherHomePage from "../pages/private/teacher/TeacherHomePage";
 import ClassesPage from "../pages/private/admin/ClassesPage";
+import LoadingPage from "../components/LoadingPage";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -88,7 +89,7 @@ function MainRoutes() {
   // const teacherRoutes = [{ path: "/teacher", component: <TeacherLogin /> }];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   // const privateRoutes =
