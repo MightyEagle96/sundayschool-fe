@@ -1,13 +1,19 @@
-import React, { useState } from "react";
-import { Button, MenuItem, TextField, Typography } from "@mui/material";
-import { adultClasses, yayaClasses } from "../../../utils";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  CircularProgress,
+  InputAdornment,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
+
 import Swal from "sweetalert2";
 import { httpService } from "../../../httpService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function SignUp() {
-  const classes = ["adult", "yaya"];
   const genders = ["male", "female"];
 
   const [userData, setUserData] = useState({
@@ -23,8 +29,11 @@ function SignUp() {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
+  const [classes, setClasses] = useState([]);
+  const [fetchingCategories, setFetchingCategories] = useState(false);
   const navigate = useNavigate();
+
+  const [categories, setClassCategories] = useState([]);
 
   const handleUserData = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -93,10 +102,28 @@ function SignUp() {
     }
   };
 
-  let classList =
-    userData.classCategory && userData.classCategory === "adult"
-      ? adultClasses
-      : yayaClasses;
+  const retrieveCategories = async () => {
+    setFetchingCategories(true);
+    const { data } = await httpService.get("/admin/classcategories");
+
+    if (data) {
+      setClassCategories(data);
+    }
+    setFetchingCategories(false);
+  };
+
+  useEffect(() => {
+    retrieveCategories();
+  }, []);
+
+  const getClasses = async () => {
+    setLoading(true);
+    const { data } = await httpService.get("/admin/classes");
+    if (data) {
+      setClasses(data);
+    }
+    setLoading(false);
+  };
 
   return (
     <div>
@@ -143,35 +170,33 @@ function SignUp() {
                   ))}
                 </TextField>
               </div>
+
               <div className="mb-4">
                 <TextField
+                  fullWidth
                   label="Class Category"
-                  fullWidth
-                  select
+                  select={!fetchingCategories}
+                  disabled={categories.length === 0 || fetchingCategories}
                   name="classCategory"
-                  value={userData.classCategory}
                   onChange={handleUserData}
+                  sx={{ textTransform: "uppercase" }}
+                  slotProps={{
+                    input: {
+                      endAdornment: fetchingCategories ? (
+                        <InputAdornment position="end">
+                          <CircularProgress size={15} />
+                        </InputAdornment>
+                      ) : null,
+                    },
+                  }}
                 >
-                  {classes.map((c, i) => (
-                    <MenuItem key={i} value={c}>
-                      {c.toUpperCase()}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div className="mb-4">
-                <TextField
-                  disabled={!userData.classCategory}
-                  fullWidth
-                  label="Class Name"
-                  select
-                  name="className"
-                  value={userData.className}
-                  onChange={handleUserData}
-                >
-                  {classList.map((c, i) => (
-                    <MenuItem key={i} value={c}>
-                      {c.toUpperCase()}
+                  {categories.map((c) => (
+                    <MenuItem
+                      sx={{ textTransform: "uppercase" }}
+                      key={c._id}
+                      value={c._id}
+                    >
+                      {c.name}
                     </MenuItem>
                   ))}
                 </TextField>
