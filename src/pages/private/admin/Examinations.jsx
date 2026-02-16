@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { DataGrid } from "@mui/x-data-grid";
 import { ApplicationNavigation } from "../../../routes/MainRoutes";
+import { Link } from "react-router-dom";
 
 function Examinations() {
   const [show, setShow] = useState(false);
@@ -70,14 +71,31 @@ function Examinations() {
     {
       headerName: "Title",
       field: "title",
-      flex: 1,
+      width: 400,
       renderCell: (params) => (
         <div className="text-uppercase">{params.row.title}</div>
       ),
     },
     {
+      headerName: "Question Bank",
+      field: "questionBank",
+      width: 150,
+      renderCell: (params) => (
+        <div>
+          <Button
+            sx={{ textTransform: "lowercase" }}
+            component={Link}
+            to={`/admin/examquestions?examination=${params.row._id}&title=${params.row.title}`}
+          >
+            view
+          </Button>
+        </div>
+      ),
+    },
+    {
       headerName: "Active Status",
       field: "active",
+      width: 150,
       renderCell: (params) => (
         <div>
           {params.row.active ? (
@@ -91,6 +109,7 @@ function Examinations() {
     {
       headerName: "Duration",
       field: "duration",
+      width: 150,
       renderCell: (params) => (
         <div>
           <Button
@@ -109,7 +128,7 @@ function Examinations() {
     {
       headerName: "Edit",
       field: "edit",
-      width: 100,
+      width: 150,
       renderCell: (params) => {
         return (
           <IconButton
@@ -126,7 +145,7 @@ function Examinations() {
     {
       headerName: "Activate",
       field: "_id",
-      width: 100,
+      width: 150,
       renderCell: (params) => {
         return (
           <IconButton
@@ -143,7 +162,7 @@ function Examinations() {
     {
       headerName: "Delete",
       field: "delete",
-      width: 100,
+      width: 150,
       renderCell: (params) => {
         return (
           <IconButton

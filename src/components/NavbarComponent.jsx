@@ -41,7 +41,7 @@ function NavbarComponent() {
   const adminLinks = [
     { text: "Home", path: "/admin" },
     { text: "Examinations", path: "/admin/examinations" },
-    { text: "Question Banks", path: "/admin/questionbanks" },
+    // { text: "Question Banks", path: "/admin/questionbanks" },
     { text: "Candidates", path: "/admin/candidates" },
     { text: "Classes", path: "/admin/classes" },
   ];
