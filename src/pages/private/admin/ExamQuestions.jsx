@@ -55,6 +55,7 @@ function ExamQuestions() {
           },
         );
         if (data) {
+          getQuestionBanks();
           toast.success(data);
         }
         if (error) {
