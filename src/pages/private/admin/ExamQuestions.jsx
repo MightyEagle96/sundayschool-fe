@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { ApplicationNavigation } from "../../../routes/MainRoutes";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { httpService } from "../../../httpService";
 import {
   Button,
@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
 import { Modal } from "react-bootstrap";
+import { UploadFileOutlined } from "@mui/icons-material";
 
 function ExamQuestions() {
   const [params] = useSearchParams();
@@ -28,6 +29,10 @@ function ExamQuestions() {
   const [loading, setLoading] = useState(false);
   const [fetchingBank, setFetchingBank] = useState(false);
   const [questionBank, setQuestionBank] = useState(null);
+
+  const [file, setFile] = useState(null);
+
+  const fileRef = useRef();
   const retrieveCategories = async () => {
     setFetchingCategories(true);
     const { data } = await httpService.get("/admin/classcategories");
@@ -125,11 +130,43 @@ function ExamQuestions() {
     );
     if (data) {
       setQuestionBank(data);
-      console.log(data);
-      // setQuestionBanks(data);
     }
     setFetchingBank(false);
   };
+
+  const handleFile = async (e) => {
+    const file = e.target.files[0];
+    setFile(file);
+
+    e.target.value = null;
+  };
+
+  const uploadFile = async () => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const { data, error } = await httpService.post(
+      "/questionbank/upload",
+      formData,
+      { params: { _id: questionBank._id } },
+    );
+    if (data) {
+      setQuestionBank(null);
+      setFile(null);
+      toast.success(data);
+      retrieveCategories();
+      getQuestionBanks();
+      // setRefresh(!refresh);
+    }
+    if (error) {
+      toast.error(error);
+    }
+
+    setFile(null);
+    setLoading(false);
+  };
+
   return (
     <div>
       <div className="container my-5">
@@ -206,7 +243,10 @@ function ExamQuestions() {
         size="xl"
         centered
         show={questionBank}
-        onHide={() => setQuestionBank(null)}
+        onHide={() => {
+          setQuestionBank(null);
+          setFile(null);
+        }}
       >
         {questionBank && (
           <>
@@ -222,9 +262,37 @@ function ExamQuestions() {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <div style={{ maxHeight: "60vh", overflow: "scroll" }}></div>
+              <div style={{ maxHeight: "60vh", overflow: "scroll" }}>
+                <div className="col-lg-5">
+                  <div className=" mb-5 ">
+                    <Typography variant="caption">
+                      Upload a csv of excel file of the questions
+                    </Typography>
+                    <input
+                      className="form-control"
+                      type="file"
+                      accept=".xlsx, .xls"
+                      onChange={handleFile}
+                      ref={fileRef}
+                    />
+                    <hr />
+                  </div>
+                </div>
+              </div>
             </Modal.Body>
-            <Modal.Footer></Modal.Footer>
+            <Modal.Footer>
+              <Button
+                disabled={!file}
+                variant="contained"
+                color="error"
+                endIcon={<UploadFileOutlined />}
+                onClick={uploadFile}
+                loading={loading}
+                loadingPosition="end"
+              >
+                Upload file
+              </Button>
+            </Modal.Footer>
           </>
         )}
       </Modal>
