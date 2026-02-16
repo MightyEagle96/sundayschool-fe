@@ -13,15 +13,15 @@ import Swal from "sweetalert2";
 import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
 import { Add } from "@mui/icons-material";
+import { DataGrid } from "@mui/x-data-grid";
 
 function ClassesPage() {
-  const classes = ["Adult", "YAYA"];
-
   const [classData, setClassData] = useState({});
   const [loading, setLoading] = useState(false);
   const [classCategory, setClassCategory] = useState("");
   const [creatingCategory, setCreatingCategory] = useState(false);
   const [categories, setClassCategories] = useState([]);
+  const [classes, setClasses] = useState([]);
 
   const createData = (e) => {
     e.preventDefault();
@@ -40,6 +40,7 @@ function ClassesPage() {
 
         if (data) {
           toast.success(data);
+          getClasses();
         }
         if (error) {
           toast.error(error);
@@ -81,24 +82,62 @@ function ClassesPage() {
 
   const retrieveCategories = async () => {
     setCreatingCategory(true);
-    const { data, error } = await httpService.get("/admin/classcategories");
+    const { data } = await httpService.get("/admin/classcategories");
 
     if (data) {
       setClassCategories(data);
-      console.log(data);
     }
     setCreatingCategory(false);
   };
 
+  const getClasses = async () => {
+    setLoading(true);
+    const { data } = await httpService.get("/admin/classes");
+    if (data) {
+      setClasses(data);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     retrieveCategories();
+    getClasses();
   }, []);
+
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 100,
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 300,
+      renderCell: (params) => (
+        <div className="text-uppercase">{params.row.name}</div>
+      ),
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      width: 300,
+      renderCell: (params) => (
+        <div className="text-uppercase">{params.row.classCategory.name}</div>
+      ),
+    },
+    // {
+    //   field: "category",
+    //   headerName: "Category",
+    //   width: 400,
+    // },
+  ];
   return (
     <div>
       <div className="my-5 container">
         <ApplicationNavigation links={[]} pageTitle={"Classes"} />
 
-        <div className="mt-5">
+        <div className="my-4">
           <div className="text-muted mb-5">
             <div className="row">
               <div className="col-lg-3">
@@ -173,6 +212,9 @@ function ClassesPage() {
               </div>
             </form>
           </div>
+        </div>
+        <div>
+          <DataGrid loading={loading} rows={classes} columns={columns} />
         </div>
       </div>
     </div>
