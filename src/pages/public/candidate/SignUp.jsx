@@ -31,6 +31,7 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
   const [classes, setClasses] = useState([]);
   const [fetchingCategories, setFetchingCategories] = useState(false);
+  const [fetchingClasses, setFetchingClasses] = useState(false);
   const navigate = useNavigate();
 
   const [categories, setClassCategories] = useState([]);
@@ -116,13 +117,16 @@ function SignUp() {
     retrieveCategories();
   }, []);
 
-  const getClasses = async () => {
-    setLoading(true);
-    const { data } = await httpService.get("/admin/classes");
+  const getClasses = async (id) => {
+    setFetchingClasses(true);
+    const { data } = await httpService.get(
+      `/admin/classes?classCategory=${id}`,
+    );
     if (data) {
+      console.log(data);
       setClasses(data);
     }
-    setLoading(false);
+    setFetchingClasses(false);
   };
 
   return (
@@ -178,7 +182,10 @@ function SignUp() {
                   select={!fetchingCategories}
                   disabled={categories.length === 0 || fetchingCategories}
                   name="classCategory"
-                  onChange={handleUserData}
+                  onChange={(e) => {
+                    handleUserData(e);
+                    getClasses(e.target.value);
+                  }}
                   sx={{ textTransform: "uppercase" }}
                   slotProps={{
                     input: {
@@ -191,6 +198,39 @@ function SignUp() {
                   }}
                 >
                   {categories.map((c) => (
+                    <MenuItem
+                      sx={{ textTransform: "uppercase" }}
+                      key={c._id}
+                      value={c._id}
+                    >
+                      {c.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+              <div className="mb-4">
+                <TextField
+                  fullWidth
+                  label="Classes"
+                  select={!fetchingClasses}
+                  disabled={classes.length === 0 || fetchingClasses}
+                  name="classData"
+                  onChange={(e) => {
+                    handleUserData(e);
+                    //getClasses(e.target.value);
+                  }}
+                  sx={{ textTransform: "uppercase" }}
+                  slotProps={{
+                    input: {
+                      endAdornment: fetchingClasses ? (
+                        <InputAdornment position="end">
+                          <CircularProgress size={15} />
+                        </InputAdornment>
+                      ) : null,
+                    },
+                  }}
+                >
+                  {classes.map((c) => (
                     <MenuItem
                       sx={{ textTransform: "uppercase" }}
                       key={c._id}
