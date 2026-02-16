@@ -14,6 +14,7 @@ import {
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
+import { Modal } from "react-bootstrap";
 
 function ExamQuestions() {
   const [params] = useSearchParams();
@@ -25,6 +26,8 @@ function ExamQuestions() {
   const [classCategory, setClassCategory] = useState(null);
   const [questionBanks, setQuestionBanks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fetchingBank, setFetchingBank] = useState(false);
+  const [questionBank, setQuestionBank] = useState(null);
   const retrieveCategories = async () => {
     setFetchingCategories(true);
     const { data } = await httpService.get("/admin/classcategories");
@@ -93,6 +96,7 @@ function ExamQuestions() {
       field: "classCategory",
       headerName: "Class Category",
       width: 200,
+
       renderCell: (params) => (
         <span className="text-uppercase">{params.row.classCategory.name}</span>
       ),
@@ -102,12 +106,35 @@ function ExamQuestions() {
       headerName: "Questions",
       width: 200,
     },
+    {
+      field: "_id",
+      width: 300,
+      headerName: "View Questions",
+      renderCell: (params) => (
+        <Button color="warning" onClick={() => retrieveData(params.row._id)}>
+          View
+        </Button>
+      ),
+    },
   ];
+
+  const retrieveData = async (id) => {
+    setFetchingBank(true);
+    const { data } = await httpService.get(
+      `/questionbank/viewquestionbank?_id=${id}`,
+    );
+    if (data) {
+      setQuestionBank(data);
+      console.log(data);
+      // setQuestionBanks(data);
+    }
+    setFetchingBank(false);
+  };
   return (
     <div>
       <div className="container my-5">
         <ApplicationNavigation
-          links={[{ path: "/admin/questionbanks", name: "Question Banks" }]}
+          links={[{ path: "/admin/examinations", name: "Examinations" }]}
           pageTitle={title.toUpperCase()}
         />
 
@@ -168,13 +195,39 @@ function ExamQuestions() {
             </Typography>
           </div>
           <DataGrid
-            loading={loading}
+            loading={loading || fetchingBank}
             columns={columns}
             rows={questionBanks}
             rowCount={questionBanks.length}
           />
         </div>
       </div>
+      <Modal
+        size="xl"
+        centered
+        show={questionBank}
+        onHide={() => setQuestionBank(null)}
+      >
+        {questionBank && (
+          <>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                <Typography>
+                  Question Bank for {"  "}
+                  <span className="text-uppercase fw-bold">
+                    {questionBank.classCategory.name}
+                  </span>{" "}
+                  category
+                </Typography>
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div style={{ maxHeight: "60vh", overflow: "scroll" }}></div>
+            </Modal.Body>
+            <Modal.Footer></Modal.Footer>
+          </>
+        )}
+      </Modal>
     </div>
   );
 }
