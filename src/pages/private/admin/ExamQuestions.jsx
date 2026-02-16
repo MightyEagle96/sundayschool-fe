@@ -3,8 +3,10 @@ import { ApplicationNavigation } from "../../../routes/MainRoutes";
 import { useEffect, useRef, useState } from "react";
 import { httpService } from "../../../httpService";
 import {
+  Alert,
   Button,
   CircularProgress,
+  Divider,
   InputAdornment,
   MenuItem,
   Stack,
@@ -15,7 +17,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { DataGrid } from "@mui/x-data-grid";
 import { Modal } from "react-bootstrap";
-import { UploadFileOutlined } from "@mui/icons-material";
+import { CheckCircle, UploadFileOutlined } from "@mui/icons-material";
 
 function ExamQuestions() {
   const [params] = useSearchParams();
@@ -129,6 +131,7 @@ function ExamQuestions() {
       `/questionbank/viewquestionbank?_id=${id}`,
     );
     if (data) {
+      console.log(data);
       setQuestionBank(data);
     }
     setFetchingBank(false);
@@ -263,8 +266,8 @@ function ExamQuestions() {
             </Modal.Header>
             <Modal.Body>
               <div style={{ maxHeight: "60vh", overflow: "scroll" }}>
-                <div className="col-lg-5">
-                  <div className=" mb-5 ">
+                <div className="">
+                  <div className=" mb-5 col-lg-5 ">
                     <Typography variant="caption">
                       Upload a csv of excel file of the questions
                     </Typography>
@@ -277,6 +280,38 @@ function ExamQuestions() {
                     />
                     <hr />
                   </div>
+
+                  {questionBank.questions.length === 0 && (
+                    <div className="col-lg-5">
+                      <Alert severity="info">No questions uploaded</Alert>
+                    </div>
+                  )}
+                  {questionBank.questions.map((question, i) => (
+                    <div className="mb-3" key={i}>
+                      <div className="mb-3">
+                        <Typography variant="overline" gutterBottom>
+                          Question {i + 1}
+                        </Typography>
+                        <Typography variant="body1">
+                          {question.question}
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography variant="overline" gutterBottom>
+                          options
+                        </Typography>
+                        {question.options.map((option, j) => (
+                          <Typography key={j} gutterBottom variant="body2">
+                            {RetrieveOptionKey(j)}. {option} {"  "}
+                            {option === question.correctAnswer && (
+                              <CheckCircle color="success" />
+                            )}
+                          </Typography>
+                        ))}
+                      </div>
+                      <Divider />
+                    </div>
+                  ))}
                 </div>
               </div>
             </Modal.Body>
@@ -301,3 +336,25 @@ function ExamQuestions() {
 }
 
 export default ExamQuestions;
+
+export const RetrieveOptionKey = (index) => {
+  return optionKeys.find((option) => option.index === index).option;
+};
+const optionKeys = [
+  {
+    index: 0,
+    option: "A",
+  },
+  {
+    index: 1,
+    option: "B",
+  },
+  {
+    index: 2,
+    option: "C",
+  },
+  {
+    index: 3,
+    option: "D",
+  },
+];
