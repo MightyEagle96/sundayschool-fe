@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 import { httpService } from "../../../httpService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Login } from "@mui/icons-material";
 
 function SignUp() {
   const genders = ["male", "female"];
@@ -72,8 +73,6 @@ function SignUp() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      setLoading(true);
-
       Swal.fire({
         icon: "question",
         title: "Create your account?",
@@ -82,24 +81,25 @@ function SignUp() {
         denyButtonText: "No",
       }).then(async (result) => {
         if (result.isConfirmed) {
+          setLoading(true);
           const { data, error } = await httpService.post(
             "auth/register",
             userData,
           );
 
           if (data) {
+            toast.success(data);
             navigate("/");
           }
           if (error) {
             toast.error(error);
           }
+          setLoading(false);
           //console.log("Account created successfully!");
         }
       });
 
       // ✅ submit form logic here (API call, etc.)
-      console.log("Form submitted:", userData);
-      setLoading(false);
     }
   };
 
@@ -296,8 +296,14 @@ function SignUp() {
           </div>
 
           <div className="mb-4 text-center">
-            <Button type="submit" variant="contained" disabled={loading}>
-              {loading ? "Creating..." : "Create Account"}
+            <Button
+              loading={loading}
+              endIcon={<Login />}
+              type="submit"
+              variant="contained"
+              disabled={loading}
+            >
+              create account
             </Button>
           </div>
         </form>
