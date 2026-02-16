@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Card, CardActionArea } from "@mui/material";
+import { Typography, Card, CardActionArea, Stack } from "@mui/material";
 import { useAppUser } from "../../../contexts/AppUserContext";
 
 import { People, School } from "@mui/icons-material";
@@ -30,29 +30,42 @@ function AdminHomePage() {
       <div className="mt-5 mb-5 container">
         <div className="mb-5">
           <div className="text-muted">
-            <Typography gutterBottom>Hi There</Typography>
-            <Typography variant="h4" fontWeight={700}>
-              {user.firstName} {user.lastName}
-            </Typography>
+            <Typography gutterBottom>Hi there,</Typography>
+            <Stack
+              direction={"row"}
+              spacing={1}
+              className="d-flex align-items-center"
+            >
+              <Typography variant="h4" fontWeight={700}>
+                {user.firstName} {user.lastName}
+              </Typography>
+              <Typography color="info">(admin)</Typography>
+            </Stack>
           </div>
         </div>
 
         {dashboardData && (
-          <div className="row gx-4">
-            <div className="p-3 bg-light rounded shadow-sm col-lg-4 d-flex justify-content-between align-items-center bg-light">
-              <div>
-                <div>
-                  <Typography variant="overline">Students</Typography>
+          <div className="row">
+            <Card className="col-lg-4 p-0 bg-light shadow-sm border-0 m-2">
+              <CardActionArea
+                component={Link}
+                to="/admin/students"
+                className="p-3"
+              >
+                <div className=" d-flex justify-content-between align-items-center rounded">
+                  <div>
+                    <Typography variant="overline">Students</Typography>
+                    <Typography variant="h4">
+                      {dashboardData.students}
+                    </Typography>
+                  </div>
+
+                  <People fontSize="large" />
                 </div>
-                <div>
-                  <Typography variant="h4">{dashboardData.students}</Typography>
-                </div>
-              </div>
-              <div>
-                <People fontSize="large" />
-              </div>
-            </div>
-            <div className="p-3 bg-light rounded shadow-sm col-lg-4 d-flex justify-content-between align-items-center bg-light">
+              </CardActionArea>
+            </Card>
+
+            <div className="p-3 bg-light rounded shadow-sm col-lg-4 d-flex justify-content-between align-items-center bg-light m-2">
               <div>
                 <div>
                   <Typography variant="overline">Teachers</Typography>
@@ -65,7 +78,7 @@ function AdminHomePage() {
                 <People fontSize="large" />
               </div>
             </div>
-            <Card className="col-lg-4 p-0 bg-light shadow-sm border-0">
+            <Card className="col-lg-4 p-0 bg-light shadow-sm border-0 m-2">
               <CardActionArea
                 component={Link}
                 to="/admin/classes"
