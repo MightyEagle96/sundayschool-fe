@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function ExaminationConcluded() {
@@ -14,15 +14,12 @@ function ExaminationConcluded() {
             You have successfully completed the examination.
           </Typography>
         </div>
-        <div>
-          <Typography
-            variant="body1"
-            color="success"
-            component={Link}
-            to="/examinationscore"
-          >
-            View examination score
-          </Typography>
+        <div className="text-center">
+          <Button component={Link} to="/examinationscore">
+            <Typography variant="body2" color="success">
+              View examination score
+            </Typography>
+          </Button>
         </div>
       </div>
     </div>
