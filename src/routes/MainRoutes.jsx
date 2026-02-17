@@ -27,6 +27,7 @@ import TeacherHomePage from "../pages/private/teacher/TeacherHomePage";
 import ClassesPage from "../pages/private/admin/ClassesPage";
 import LoadingPage from "../components/LoadingPage";
 import StudentsPage from "../pages/private/admin/StudentsPage";
+import ExaminationResults from "../pages/private/admin/ExaminationResults";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -83,6 +84,7 @@ function MainRoutes() {
     },
     { path: "/admin/classes", component: <ClassesPage /> },
     { path: "/admin/students", component: <StudentsPage /> },
+    { path: "/admin/examinationresults", component: <ExaminationResults /> },
     { path: "*", component: <NotFound /> },
   ];
 

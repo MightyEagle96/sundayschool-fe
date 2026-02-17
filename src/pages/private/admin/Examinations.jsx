@@ -76,6 +76,7 @@ function Examinations() {
         <div className="text-uppercase">{params.row.title}</div>
       ),
     },
+
     {
       headerName: "Question Bank",
       field: "questionBank",
@@ -86,6 +87,22 @@ function Examinations() {
             sx={{ textTransform: "lowercase" }}
             component={Link}
             to={`/admin/examquestions?examination=${params.row._id}&title=${params.row.title}`}
+          >
+            view
+          </Button>
+        </div>
+      ),
+    },
+    {
+      headerName: "Results",
+      field: "results",
+      width: 150,
+      renderCell: (params) => (
+        <div>
+          <Button
+            sx={{ textTransform: "lowercase" }}
+            component={Link}
+            to={`/admin/examinationresults?examination=${params.row._id}`}
           >
             view
           </Button>
@@ -283,14 +300,14 @@ function Examinations() {
   };
   return (
     <div>
-      <div className="container mt-5 mb-5">
-        <div className="mb-4">
+      <div className="">
+        <div className="mb-4 container">
           <ApplicationNavigation links={[]} pageTitle={"Examination"} />
           <Button endIcon={<Add />} onClick={() => setShow(!show)}>
             Create new examination
           </Button>
         </div>
-        <div>
+        <div className="px-5">
           <DataGrid
             columns={columns}
             rows={examinations}
