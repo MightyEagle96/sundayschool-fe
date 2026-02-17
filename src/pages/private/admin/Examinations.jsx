@@ -300,6 +300,7 @@ function Examinations() {
         </div>
       </div>
       <Modal
+        centered
         show={show}
         onHide={() => {
           setShow(!show);
