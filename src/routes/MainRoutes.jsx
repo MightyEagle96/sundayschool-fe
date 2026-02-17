@@ -119,7 +119,11 @@ function MainRoutes() {
           {user ? (
             <>
               {showRoutes(user.role).map((route, i) => (
-                <Route key={i} path={route.path} element={route.component} />
+                <Route
+                  key={i}
+                  path={route.path}
+                  element={<div className="my-5">{route.component}</div>}
+                />
               ))}
             </>
           ) : (

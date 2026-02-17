@@ -1,84 +1,126 @@
 import React, { useEffect, useState } from "react";
 import { httpService } from "../../../httpService";
 import { useSearchParams } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { Typography, Skeleton, useTheme, useMediaQuery } from "@mui/material";
 import { Clear, Done } from "@mui/icons-material";
 
 function ExamTranscript() {
   const [params] = useSearchParams();
-
   const examination = params.get("examination");
 
   const [transcript, setTranscript] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const getData = async () => {
+    setLoading(true);
     const { data, error } = await httpService("examination/examtranscript", {
       params: { examination },
     });
 
-    if (data) {
-      setTranscript(data);
-      console.log(data);
-    }
+    if (data) setTranscript(data);
+    if (error) console.log(error);
 
-    if (error) {
-      console.log(error);
-    }
+    setLoading(false);
   };
 
   useEffect(() => {
     getData();
   }, []);
+
   return (
-    <div>
-      {transcript && (
-        <div className="container mt-5">
+    <div className="container mt-5">
+      {/* ================= LOADING UI ================= */}
+      {loading && (
+        <>
           <div className="row mb-4">
-            <div className="col-lg-3">
-              <Typography>Total Questions</Typography>
-              <Typography variant="h5">{transcript.totalQuestions}</Typography>
+            {[1, 2].map((_, i) => (
+              <div className="col-lg-3 col-6" key={i}>
+                <Skeleton width="60%" />
+                <Skeleton height={35} />
+              </div>
+            ))}
+          </div>
+
+          {[1, 2, 3].map((_, i) => (
+            <div key={i} className="mb-4">
+              <Skeleton width={120} />
+              <Skeleton height={25} />
+              <Skeleton height={20} />
+              <Skeleton height={20} />
+              <Skeleton height={20} />
+              <Skeleton variant="rounded" height={60} />
             </div>
-            <div className="col-lg-3">
-              <Typography>Score</Typography>
-              <Typography variant="h5">{transcript.score}%</Typography>
+          ))}
+        </>
+      )}
+
+      {/* ================= REAL UI ================= */}
+      {!loading && transcript && (
+        <>
+          {/* SUMMARY */}
+          <div className="row mb-4">
+            <div className="col-lg-3 col-6">
+              <Typography variant="body2">Total Questions</Typography>
+
+              <Typography variant={isMobile ? "h6" : "h4"} fontWeight={700}>
+                {transcript.totalQuestions}
+              </Typography>
+            </div>
+
+            <div className="col-lg-3 col-6">
+              <Typography variant="body2">Score</Typography>
+
+              <Typography variant={isMobile ? "h6" : "h4"} fontWeight={700}>
+                {transcript.score}%
+              </Typography>
             </div>
           </div>
+
+          {/* QUESTIONS */}
           <div>
-            {transcript.transcript.map((c, i) => (
-              <div key={i} className="mb-4">
+            {transcript.transcript.map((c, idx) => (
+              <div key={idx} className="mb-4">
                 <div className="mb-3">
                   <Typography variant="caption" color="GrayText">
-                    Question {i + 1}
+                    Question {idx + 1}
                   </Typography>
-                  <Typography>{c.question}</Typography>
+
+                  <Typography variant={isMobile ? "body2" : "body1"}>
+                    {c.question}
+                  </Typography>
                 </div>
+
+                {/* OPTIONS */}
                 <div>
                   {c.options.map((o, i) => (
-                    <div key={i}>
-                      <Typography gutterBottom>
-                        {" "}
-                        {String.fromCharCode(65 + i)}) {o}
-                      </Typography>
-                    </div>
+                    <Typography
+                      key={i}
+                      gutterBottom
+                      variant={isMobile ? "body2" : "body1"}
+                    >
+                      {String.fromCharCode(65 + i)}) {o}
+                    </Typography>
                   ))}
 
+                  {/* RESULT PANEL */}
                   <div className="row bg-light p-3 d-flex align-items-center">
-                    <div className="col-auto">
-                      <div>
-                        <Typography variant="caption">
-                          Selected Answer
-                        </Typography>
-                        <Typography>{c.selectedAnswer}</Typography>
-                      </div>
+                    <div className="col-12 col-md-auto mb-2 mb-md-0">
+                      <Typography variant="caption">Selected Answer</Typography>
+                      <Typography fontWeight={600}>
+                        {c.selectedAnswer}
+                      </Typography>
                     </div>
-                    <div className="col-auto">
-                      <div>
-                        <Typography variant="caption">
-                          Correct Answer
-                        </Typography>
-                        <Typography>{c.correctAnswer}</Typography>
-                      </div>
+
+                    <div className="col-12 col-md-auto mb-2 mb-md-0">
+                      <Typography variant="caption">Correct Answer</Typography>
+                      <Typography fontWeight={600}>
+                        {c.correctAnswer}
+                      </Typography>
                     </div>
+
                     <div className="col-auto">
                       {c.isCorrect ? (
                         <Done color="success" />
@@ -91,7 +133,7 @@ function ExamTranscript() {
               </div>
             ))}
           </div>
-        </div>
+        </>
       )}
     </div>
   );

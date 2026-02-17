@@ -161,9 +161,9 @@ function NavbarComponent() {
         onClose={() => setDrawerOpen(false)}
       >
         <Box sx={{ width: 260, p: 2 }}>
-          <Typography fontWeight="bold" mb={2}>
+          {/* <Typography fontWeight="bold" mb={2}>
             Menu
-          </Typography>
+          </Typography> */}
 
           <Divider />
 
