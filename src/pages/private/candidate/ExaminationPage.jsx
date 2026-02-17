@@ -11,6 +11,7 @@ function ExaminationPage() {
 
   const examinationId = params.get("examination");
   const [examination, setExamination] = useState(null);
+  const [classCategory, setClassCategory] = useState(null);
 
   const { user } = useAppUser();
   const getData = async () => {
@@ -19,7 +20,8 @@ function ExaminationPage() {
     });
 
     if (data) {
-      setExamination(data);
+      setExamination(data.examination);
+      setClassCategory(data.classCategory);
       console.log(data);
     }
     if (error) {
@@ -48,7 +50,7 @@ function ExaminationPage() {
   };
   return (
     <div>
-      <div className="container mt-5">
+      <div className="container my-5">
         {examination && (
           <div>
             <div className="mb-4">
@@ -84,7 +86,7 @@ function ExaminationPage() {
                 textTransform={"uppercase"}
                 fontWeight={700}
               >
-                {user.classCategory}
+                {classCategory && classCategory.name}
               </Typography>
             </div>
             <div className="col-lg-3">

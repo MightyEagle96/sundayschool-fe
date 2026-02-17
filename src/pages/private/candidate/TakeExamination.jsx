@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  unstable_useBlocker as useBlocker,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { httpService } from "../../../httpService";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import sf from "seconds-formater";
