@@ -12,9 +12,11 @@ function ExaminationPage() {
   const examinationId = params.get("examination");
   const [examination, setExamination] = useState(null);
   const [classCategory, setClassCategory] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const { user } = useAppUser();
   const getData = async () => {
+    setLoading(true);
     const { data, error } = await httpService("examination/viewexamination", {
       params: { id: examinationId },
     });
@@ -22,11 +24,11 @@ function ExaminationPage() {
     if (data) {
       setExamination(data.examination);
       setClassCategory(data.classCategory);
-      console.log(data);
     }
     if (error) {
       console.log(error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {

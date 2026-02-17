@@ -161,7 +161,7 @@ function TakeExamination() {
             </div>
             <div className="mb-3">
               <FormControl className="mb-5">
-                <FormLabel>Options</FormLabel>
+                {/* <FormLabel>Options</FormLabel> */}
                 <RadioGroup
                   value={answers[currentQuestion._id] || ""}
                   onChange={(e) =>

@@ -6,6 +6,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  Skeleton,
 } from "@mui/material";
 import { useAppUser } from "../../../contexts/AppUserContext";
 import { httpService } from "../../../httpService";
@@ -16,11 +17,13 @@ import { Link } from "react-router-dom";
 function CandidateHomePage() {
   const { user } = useAppUser();
   const [activeExamination, setActiveExamination] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const getActiveExamination = async () => {
+    setLoading(true);
     const { data, error } = await httpService.get(
       "examination/viewactiveexamination",
     );
@@ -32,15 +35,115 @@ function CandidateHomePage() {
     if (error) {
       console.log(error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     getActiveExamination();
   }, []);
+  // return (
+  //   <div>
+  //     {user && (
+  //       <div>
+  //         <div className="container mt-5 mb-5">
+  //           <div
+  //             className="bg-light rounded d-flex align-items-center"
+  //             style={{ minHeight: isMobile ? "auto" : "30vh" }}
+  //           >
+  //             <div className="w-100 p-4">
+  //               <div className="row align-items-center text-center text-md-start">
+  //                 {/* Avatar */}
+  //                 <div
+  //                   className={`col-lg-3 col-md-4 d-flex justify-content-center ${
+  //                     !isMobile ? "border-end" : ""
+  //                   } mb-3 mb-md-0`}
+  //                 >
+  //                   <Avatar
+  //                     {...stringAvatar(user.firstName + " " + user.lastName)}
+  //                     sx={{
+  //                       width: isMobile ? 70 : 100,
+  //                       height: isMobile ? 70 : 100,
+  //                       fontSize: isMobile ? 28 : 40,
+  //                       textTransform: "uppercase",
+  //                     }}
+  //                   />
+  //                 </div>
+
+  //                 {/* Welcome Text */}
+  //                 <div className="col-lg-9 col-md-8 d-flex align-items-center justify-content-center justify-content-md-start">
+  //                   <div>
+  //                     <Typography
+  //                       variant={isMobile ? "h6" : "h4"}
+  //                       fontWeight={300}
+  //                       gutterBottom
+  //                     >
+  //                       Welcome back,&nbsp;
+  //                       <span className="text-uppercase fw-bold">
+  //                         {user.firstName} {user.lastName}
+  //                       </span>
+  //                     </Typography>
+  //                   </div>
+  //                 </div>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </div>
+
+  //         <div className="container mb-5">
+  //           {activeExamination ? (
+  //             <div className="col-lg-4">
+  //               <Alert severity="success">
+  //                 <AlertTitle>Active Examination</AlertTitle>
+  //                 <Typography
+  //                   fontWeight={700}
+  //                   variant="body2"
+  //                   textTransform={"uppercase"}
+  //                 >
+  //                   {activeExamination.title}
+  //                 </Typography>
+  //                 <div className="text-end">
+  //                   {activeExamination.hasTakenThisExamination ? (
+  //                     <Button
+  //                       sx={{ textTransform: "capitalize" }}
+  //                       endIcon={<ArrowRight />}
+  //                       component={Link}
+  //                       to={"/examinationscore"}
+  //                     >
+  //                       <Typography variant="caption">View Score</Typography>
+  //                     </Button>
+  //                   ) : (
+  //                     <Button
+  //                       sx={{ textTransform: "capitalize" }}
+  //                       endIcon={<ArrowRight />}
+  //                       component={Link}
+  //                       to={`/examination?examination=${activeExamination._id}`}
+  //                     >
+  //                       <Typography variant="caption">Proceed</Typography>
+  //                     </Button>
+  //                   )}
+  //                 </div>
+  //               </Alert>
+  //             </div>
+  //           ) : (
+  //             <div className="col-lg-4">
+  //               <Alert severity="error">
+  //                 <AlertTitle>No active examination</AlertTitle>
+  //                 There is no active examination at this time or the current
+  //                 examination hasn't been activated by the admin.
+  //               </Alert>
+  //             </div>
+  //           )}
+  //         </div>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
+
   return (
     <div>
       {user && (
         <div>
+          {/* HEADER */}
           <div className="container mt-5 mb-5">
             <div
               className="bg-light rounded d-flex align-items-center"
@@ -54,30 +157,45 @@ function CandidateHomePage() {
                       !isMobile ? "border-end" : ""
                     } mb-3 mb-md-0`}
                   >
-                    <Avatar
-                      {...stringAvatar(user.firstName + " " + user.lastName)}
-                      sx={{
-                        width: isMobile ? 70 : 100,
-                        height: isMobile ? 70 : 100,
-                        fontSize: isMobile ? 28 : 40,
-                        textTransform: "uppercase",
-                      }}
-                    />
+                    {loading ? (
+                      <Skeleton
+                        variant="circular"
+                        width={isMobile ? 70 : 100}
+                        height={isMobile ? 70 : 100}
+                      />
+                    ) : (
+                      <Avatar
+                        {...stringAvatar(user.firstName + " " + user.lastName)}
+                        sx={{
+                          width: isMobile ? 70 : 100,
+                          height: isMobile ? 70 : 100,
+                          fontSize: isMobile ? 28 : 40,
+                          textTransform: "uppercase",
+                        }}
+                      />
+                    )}
                   </div>
 
                   {/* Welcome Text */}
                   <div className="col-lg-9 col-md-8 d-flex align-items-center justify-content-center justify-content-md-start">
                     <div>
-                      <Typography
-                        variant={isMobile ? "h6" : "h4"}
-                        fontWeight={300}
-                        gutterBottom
-                      >
-                        Welcome back,&nbsp;
-                        <span className="text-uppercase fw-bold">
-                          {user.firstName} {user.lastName}
-                        </span>
-                      </Typography>
+                      {loading ? (
+                        <>
+                          <Skeleton width={220} height={30} />
+                          <Skeleton width={160} />
+                        </>
+                      ) : (
+                        <Typography
+                          variant={isMobile ? "h6" : "h4"}
+                          fontWeight={300}
+                          gutterBottom
+                        >
+                          Welcome back,&nbsp;
+                          <span className="text-uppercase fw-bold">
+                            {user.firstName} {user.lastName}
+                          </span>
+                        </Typography>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -85,9 +203,12 @@ function CandidateHomePage() {
             </div>
           </div>
 
+          {/* ALERT AREA */}
           <div className="container mb-5">
-            {activeExamination ? (
-              <div className="col-lg-4">
+            <div className="col-lg-4">
+              {loading ? (
+                <Skeleton variant="rounded" height={130} />
+              ) : activeExamination ? (
                 <Alert severity="success">
                   <AlertTitle>Active Examination</AlertTitle>
                   <Typography
@@ -97,6 +218,7 @@ function CandidateHomePage() {
                   >
                     {activeExamination.title}
                   </Typography>
+
                   <div className="text-end">
                     {activeExamination.hasTakenThisExamination ? (
                       <Button
@@ -119,16 +241,14 @@ function CandidateHomePage() {
                     )}
                   </div>
                 </Alert>
-              </div>
-            ) : (
-              <div className="col-lg-4">
+              ) : (
                 <Alert severity="error">
                   <AlertTitle>No active examination</AlertTitle>
                   There is no active examination at this time or the current
                   examination hasn't been activated by the admin.
                 </Alert>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}
