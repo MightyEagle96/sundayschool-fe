@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { httpService } from "../../../httpService";
-import { Button, Typography } from "@mui/material";
+import { Button, Skeleton, Typography } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppUser } from "../../../contexts/AppUserContext";
 import { Login } from "@mui/icons-material";
@@ -53,13 +53,38 @@ function ExaminationPage() {
   return (
     <div>
       <div className="container my-5">
-        {examination && (
+        {/* LOADING UI */}
+        {loading && (
           <div>
             <div className="mb-4">
-              <Typography variant="h5" fontWeight={700} color={"primary"}>
+              <Skeleton width={220} height={35} />
+            </div>
+
+            <div className="mb-5">
+              <Skeleton height={20} />
+              <Skeleton height={20} />
+              <Skeleton width="80%" height={20} />
+            </div>
+
+            <div className="col-lg-3 mb-3">
+              <Skeleton variant="rounded" height={90} />
+            </div>
+
+            <div className="col-lg-3">
+              <Skeleton variant="rounded" height={40} />
+            </div>
+          </div>
+        )}
+
+        {/* REAL CONTENT */}
+        {!loading && examination && (
+          <div>
+            <div className="mb-4">
+              <Typography variant="h5" fontWeight={700} color="primary">
                 Examination Preview
               </Typography>
             </div>
+
             <div className="mb-5">
               <Typography gutterBottom>
                 Dear{" "}
@@ -72,25 +97,30 @@ function ExaminationPage() {
                 </span>
                 .
               </Typography>
+
               <Typography>
                 This examination is for {examination.duration} minutes. Kindly
                 ensure your internet is stable and you have a stable device.
               </Typography>
+
               <Typography>
                 Do not close the tab nor minimize the page as this will be
-                presumed to be a malpractice.{" "}
+                presumed to be a malpractice.
               </Typography>
             </div>
+
             <div className="alert alert-warning col-lg-3 border-0">
               <Typography variant="caption">Class Category</Typography>
+
               <Typography
                 variant="h4"
-                textTransform={"uppercase"}
+                textTransform="uppercase"
                 fontWeight={700}
               >
-                {classCategory && classCategory.name}
+                {classCategory?.name}
               </Typography>
             </div>
+
             <div className="col-lg-3">
               <Button
                 onClick={moveToExamination}
@@ -98,7 +128,7 @@ function ExaminationPage() {
                 variant="contained"
                 endIcon={<Login />}
               >
-                begin examination
+                Begin Examination
               </Button>
             </div>
           </div>
