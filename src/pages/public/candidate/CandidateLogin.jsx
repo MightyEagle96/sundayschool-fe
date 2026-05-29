@@ -64,7 +64,7 @@ function CandidateLogin() {
             Student Login
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Enter your email and password to continue
+            Enter your phone number to continue
           </Typography>
         </Box>
 
@@ -73,32 +73,9 @@ function CandidateLogin() {
           <Box mb={3}>
             <TextField
               fullWidth
-              label="Email Address"
+              label="Phone Number"
               onChange={(e) =>
-                setCandidate({ ...candidate, email: e.target.value })
-              }
-            />
-          </Box>
-
-          <Box mb={3}>
-            <TextField
-              fullWidth
-              label="Password"
-              type={passwordType ? "text" : "password"}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setPasswordType(!passwordType)}
-                      edge="end"
-                    >
-                      {passwordType ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(e) =>
-                setCandidate({ ...candidate, password: e.target.value })
+                setCandidate({ ...candidate, phoneNumber: e.target.value })
               }
             />
           </Box>

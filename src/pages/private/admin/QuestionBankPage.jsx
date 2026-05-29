@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Typography from "@mui/material/Typography";
 import { httpService } from "../../../httpService";
 import Button from "@mui/material/Button";
 import { DataGrid } from "@mui/x-data-grid";

@@ -49,6 +49,7 @@ function TakeExamination() {
       console.log(data);
     }
     if (error) {
+      toast.error(error);
       console.log(error);
     }
     setLoading(false);

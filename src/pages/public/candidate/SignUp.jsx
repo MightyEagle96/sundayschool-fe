@@ -20,10 +20,10 @@ function SignUp() {
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
-    email: "",
+    // email: "",
     phoneNumber: "",
-    password: "",
-    confirmPassword: "",
+    //password: "",
+    // confirmPassword: "",
     classCategory: "",
     className: "",
   });
@@ -46,29 +46,29 @@ function SignUp() {
 
   const validatePhone = (phone) => /^[0-9]{10,15}$/.test(phone); // allows 10–15 digit numbers
 
-  const validatePasswords = (password, confirmPassword) =>
-    password.length >= 6 && password === confirmPassword;
+  // const validatePasswords = (password, confirmPassword) =>
+  //   password.length >= 6 && password === confirmPassword;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newErrors = {};
 
-    if (!validateEmail(userData.email)) {
-      newErrors.email = "Enter a valid email address";
-    }
+    // if (!validateEmail(userData.email)) {
+    //   newErrors.email = "Enter a valid email address";
+    // }
 
     if (!validatePhone(userData.phoneNumber)) {
       newErrors.phoneNumber = "Phone must be 10–15 digits";
     }
 
-    if (userData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
+    // if (userData.password.length < 6) {
+    //   newErrors.password = "Password must be at least 6 characters";
+    // }
 
-    if (userData.password !== userData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
+    // if (userData.password !== userData.confirmPassword) {
+    //   newErrors.confirmPassword = "Passwords do not match";
+    // }
 
     setErrors(newErrors);
 
@@ -139,161 +139,122 @@ function SignUp() {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="col-lg-6 mb-4">
-              <div className="mb-4">
-                <TextField
-                  fullWidth
-                  label="First Name"
-                  name="firstName"
-                  value={userData.firstName}
-                  onChange={handleUserData}
-                />
-              </div>
-              <div className="mb-4">
-                <TextField
-                  fullWidth
-                  label="Last Name"
-                  name="lastName"
-                  value={userData.lastName}
-                  onChange={handleUserData}
-                />
-              </div>
-              <div className="mb-4">
-                <TextField
-                  fullWidth
-                  label="Gender"
-                  select
-                  name="gender"
-                  onChange={handleUserData}
-                >
-                  {genders.map((c, i) => (
-                    <MenuItem key={i} value={c}>
-                      {c}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-
-              <div className="mb-4">
-                <TextField
-                  fullWidth
-                  label="Class Category"
-                  select={!fetchingCategories}
-                  disabled={categories.length === 0 || fetchingCategories}
-                  name="classCategory"
-                  onChange={(e) => {
-                    handleUserData(e);
-                    getClasses(e.target.value);
-                  }}
-                  sx={{ textTransform: "uppercase" }}
-                  slotProps={{
-                    input: {
-                      endAdornment: fetchingCategories ? (
-                        <InputAdornment position="end">
-                          <CircularProgress size={15} />
-                        </InputAdornment>
-                      ) : null,
-                    },
-                  }}
-                >
-                  {categories.map((c) => (
-                    <MenuItem
-                      sx={{ textTransform: "uppercase" }}
-                      key={c._id}
-                      value={c._id}
-                    >
-                      {c.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div className="mb-4">
-                <TextField
-                  fullWidth
-                  label="Classes"
-                  select={!fetchingClasses}
-                  disabled={classes.length === 0 || fetchingClasses}
-                  name="classData"
-                  onChange={(e) => {
-                    handleUserData(e);
-                    //getClasses(e.target.value);
-                  }}
-                  sx={{ textTransform: "uppercase" }}
-                  slotProps={{
-                    input: {
-                      endAdornment: fetchingClasses ? (
-                        <InputAdornment position="end">
-                          <CircularProgress size={15} />
-                        </InputAdornment>
-                      ) : null,
-                    },
-                  }}
-                >
-                  {classes.map((c) => (
-                    <MenuItem
-                      sx={{ textTransform: "uppercase" }}
-                      key={c._id}
-                      value={c._id}
-                    >
-                      {c.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
+          <div className=" mb-4">
+            <div className="mb-4">
+              <TextField
+                fullWidth
+                label="First Name"
+                name="firstName"
+                value={userData.firstName}
+                onChange={handleUserData}
+              />
+            </div>
+            <div className="mb-4">
+              <TextField
+                fullWidth
+                label="Last Name"
+                name="lastName"
+                value={userData.lastName}
+                onChange={handleUserData}
+              />
+            </div>
+            <div className="mb-4">
+              <TextField
+                fullWidth
+                label="Gender"
+                select
+                name="gender"
+                onChange={handleUserData}
+              >
+                {genders.map((c, i) => (
+                  <MenuItem key={i} value={c}>
+                    {c}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+            <div className="mb-4">
+              <TextField
+                fullWidth
+                label="Phone Number"
+                name="phoneNumber"
+                value={userData.phoneNumber}
+                onChange={handleUserData}
+                type="number"
+                error={!!errors.phoneNumber}
+                helperText={errors.phoneNumber}
+              />
             </div>
 
-            <div className="col-lg-6 mb-4">
-              <div className="mb-4">
-                <TextField
-                  fullWidth
-                  label="Email"
-                  type="email"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleUserData}
-                  error={!!errors.email}
-                  helperText={errors.email}
-                />
-              </div>
-              <div className="mb-4">
-                <TextField
-                  fullWidth
-                  label="Phone Number"
-                  name="phoneNumber"
-                  value={userData.phoneNumber}
-                  onChange={handleUserData}
-                  type="number"
-                  error={!!errors.phoneNumber}
-                  helperText={errors.phoneNumber}
-                />
-              </div>
-              <div className="mb-4">
-                <TextField
-                  fullWidth
-                  label="Password"
-                  type="password"
-                  name="password"
-                  value={userData.password}
-                  onChange={handleUserData}
-                  error={!!errors.password}
-                  helperText={errors.password}
-                />
-              </div>
-              <div className="mb-4">
-                <TextField
-                  fullWidth
-                  label="Confirm Password"
-                  type="password"
-                  name="confirmPassword"
-                  value={userData.confirmPassword}
-                  onChange={handleUserData}
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword}
-                />
-              </div>
+            <div className="mb-4">
+              <TextField
+                fullWidth
+                label="Class Category"
+                select={!fetchingCategories}
+                disabled={categories.length === 0 || fetchingCategories}
+                name="classCategory"
+                onChange={(e) => {
+                  handleUserData(e);
+                  getClasses(e.target.value);
+                }}
+                sx={{ textTransform: "uppercase" }}
+                slotProps={{
+                  input: {
+                    endAdornment: fetchingCategories ? (
+                      <InputAdornment position="end">
+                        <CircularProgress size={15} />
+                      </InputAdornment>
+                    ) : null,
+                  },
+                }}
+              >
+                {categories.map((c) => (
+                  <MenuItem
+                    sx={{ textTransform: "uppercase" }}
+                    key={c._id}
+                    value={c._id}
+                  >
+                    {c.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+            <div className="mb-4">
+              <TextField
+                fullWidth
+                label="Classes"
+                select={!fetchingClasses}
+                disabled={classes.length === 0 || fetchingClasses}
+                name="classData"
+                onChange={(e) => {
+                  handleUserData(e);
+                  //getClasses(e.target.value);
+                }}
+                sx={{ textTransform: "uppercase" }}
+                slotProps={{
+                  input: {
+                    endAdornment: fetchingClasses ? (
+                      <InputAdornment position="end">
+                        <CircularProgress size={15} />
+                      </InputAdornment>
+                    ) : null,
+                  },
+                }}
+              >
+                {classes.map((c) => (
+                  <MenuItem
+                    sx={{ textTransform: "uppercase" }}
+                    key={c._id}
+                    value={c._id}
+                  >
+                    {c.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             </div>
           </div>
+
+          <div className=" mb-4"></div>
 
           <div className="mb-4 text-center">
             <Button

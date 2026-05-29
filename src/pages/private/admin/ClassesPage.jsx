@@ -12,7 +12,7 @@ import {
 import Swal from "sweetalert2";
 import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
-import { Add } from "@mui/icons-material";
+import { Add, Visibility } from "@mui/icons-material";
 import { DataGrid } from "@mui/x-data-grid";
 
 function ClassesPage() {
@@ -94,6 +94,7 @@ function ClassesPage() {
     setLoading(true);
     const { data } = await httpService.get("/admin/classes");
     if (data) {
+      console.log(data);
       setClasses(data);
     }
     setLoading(false);
@@ -124,6 +125,26 @@ function ClassesPage() {
       width: 300,
       renderCell: (params) => (
         <div className="text-uppercase">{params.row.classCategory.name}</div>
+      ),
+    },
+    {
+      field: "totalStudents",
+      headerName: "Students",
+      width: 300,
+      renderCell: (params) => (
+        <div className="text-uppercase">{params.row.totalStudents}</div>
+      ),
+    },
+    {
+      field: "_id",
+      headerName: "View Class",
+      width: 300,
+      renderCell: (params) => (
+        <div>
+          <IconButton>
+            <Visibility />
+          </IconButton>
+        </div>
       ),
     },
     // {
