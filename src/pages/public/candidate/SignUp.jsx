@@ -169,6 +169,9 @@ function SignUp() {
     setFetchingClasses(false);
   };
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
   return (
     <Box
       sx={{
@@ -185,7 +188,7 @@ function SignUp() {
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "center",
         py: 6,
         px: 2,
@@ -271,7 +274,7 @@ function SignUp() {
                     }}
                   >
                     Join the Region 45 E-Sunday School examination portal and
-                    begin your learning journey.
+                    begin your journey.
                   </Typography>
                 </Box>
               </motion.div>

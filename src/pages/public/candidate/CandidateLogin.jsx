@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../../assets/logo.png";
 import { TextField, Typography, Button, Box, Paper } from "@mui/material";
 import { httpService } from "../../../httpService";
@@ -129,6 +129,10 @@ function CandidateLogin() {
   //     </Paper>
   //   </Box>
   // );
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
   return (
     <>
       {/* HERO SECTION */}
