@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const baseURL =
   process.env.NODE_ENV === "production"
-    ? "https://nla-sundayschool-be.onrender.com/api"
+    ? "https://www.rccgnlass.com/api"
     : //
       "http://localhost:4000/api";
 
