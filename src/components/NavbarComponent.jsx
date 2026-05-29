@@ -132,9 +132,9 @@ function NavbarComponent() {
               </Button>
             ) : (
               <Stack direction="row" spacing={2}>
-                <Button component={Link} to="/">
+                {/* <Button component={Link} to="/">
                   Login
-                </Button>
+                </Button> */}
                 {/* <Button component={Link} to="/admin">
                   Admin Login
                 </Button> */}
@@ -195,9 +195,9 @@ function NavbarComponent() {
               </Button>
             ) : (
               <Stack spacing={2}>
-                <Button component={Link} to="/">
+                {/* <Button component={Link} to="/">
                   Login
-                </Button>
+                </Button> */}
                 {/* <Button component={Link} to="/admin">
                   Admin Login
                 </Button> */}
