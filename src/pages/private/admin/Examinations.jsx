@@ -232,7 +232,6 @@ function Examinations() {
     const { data } = await httpService("examination/view");
 
     if (data) {
-      console.log(data);
       setExaminations(data);
     }
     setLoading(false);

@@ -160,7 +160,7 @@ import {
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Login, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Login } from "@mui/icons-material";
 
 import { motion } from "framer-motion";
 
@@ -176,7 +176,6 @@ function TeacherLogin() {
   const [loading, setLoading] = useState(false);
 
   // FIXED
-  const [showPassword, setShowPassword] = useState(false);
 
   const loginCandidate = async (e) => {
     e.preventDefault();

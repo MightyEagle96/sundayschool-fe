@@ -28,6 +28,8 @@ import ClassesPage from "../pages/private/admin/ClassesPage";
 import LoadingPage from "../components/LoadingPage";
 import StudentsPage from "../pages/private/admin/StudentsPage";
 import ExaminationResults from "../pages/private/admin/ExaminationResults";
+import MyStudents from "../pages/public/teacher/MyStudents";
+import Performance from "../pages/public/teacher/Performance";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -88,7 +90,11 @@ function MainRoutes() {
     { path: "*", component: <NotFound /> },
   ];
 
-  const teacherRoutes = [{ path: "/teacher", component: <TeacherHomePage /> }];
+  const teacherRoutes = [
+    { path: "/teacher", component: <TeacherHomePage /> },
+    { path: "/teacher/students", component: <MyStudents /> },
+    { path: "/teacher/performance", component: <Performance /> },
+  ];
 
   // const teacherRoutes = [{ path: "/teacher", component: <TeacherLogin /> }];
 
@@ -113,6 +119,7 @@ function MainRoutes() {
     }
   }
 
+  console.log(user);
   return (
     <BrowserRouter>
       <div style={{ minHeight: "80vh" }}>

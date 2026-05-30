@@ -48,8 +48,8 @@ function NavbarComponent() {
 
   const teacherLinks = [
     { text: "Home", path: "/teacher" },
-    { text: "Examinations", path: "/teacher/examinations" },
-    { text: "Attendance", path: "/teacher/attendance" },
+    { text: "Students", path: "/teacher/students" },
+    { text: "Performance", path: "/teacher/performance" },
   ];
 
   const studentLinks = [

@@ -120,13 +120,13 @@ const TeacherSignup = () => {
         if (result.isConfirmed) {
           setLoading(true);
           const { data, error } = await httpService.post(
-            "auth/register",
+            "auth/teacher/register",
             userData,
           );
 
           if (data) {
             toast.success(data);
-            navigate("/");
+            navigate("/teacher");
           }
           if (error) {
             toast.error(error);
@@ -160,7 +160,6 @@ const TeacherSignup = () => {
       `/admin/classform?classCategory=${id}`,
     );
     if (data) {
-      console.log(data);
       setClasses(data);
     }
     setFetchingClasses(false);
@@ -417,26 +416,6 @@ const TeacherSignup = () => {
                     >
                       <TextField
                         fullWidth
-                        label="Phone Number"
-                        name="phoneNumber"
-                        value={userData.phoneNumber}
-                        onChange={handleUserData}
-                        error={!!errors.phoneNumber}
-                        helperText={errors.phoneNumber}
-                      />
-                    </motion.div>
-                  </Grid>
-
-                  {/* PHONE */}
-                  <Grid size={{ xs: 12 }}>
-                    <motion.div
-                      variants={fadeUp}
-                      initial="hidden"
-                      animate="visible"
-                      custom={0.8}
-                    >
-                      <TextField
-                        fullWidth
                         label="Confirm Phone Number"
                         name="phoneNumber"
                         value={userData.phoneNumber}
@@ -580,19 +559,27 @@ const TeacherSignup = () => {
                             <Login />
                           )
                         }
-                        disabled={loading}
+                        disabled={loading || errorPhone}
                         sx={{
                           py: 1.7,
                           borderRadius: 3,
                           fontWeight: 700,
                           textTransform: "none",
                           fontSize: "1rem",
+
                           background: "linear-gradient(135deg,#0f766e,#134e4a)",
                           boxShadow: "0 10px 30px rgba(15,118,110,0.25)",
 
                           "&:hover": {
                             background:
                               "linear-gradient(135deg,#115e59,#042f2e)",
+                          },
+
+                          "&.Mui-disabled": {
+                            background: "#94a3b8",
+                            color: "#ffffff",
+                            boxShadow: "none",
+                            opacity: 0.8,
                           },
                         }}
                       >
