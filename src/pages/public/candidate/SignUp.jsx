@@ -54,6 +54,7 @@ function SignUp() {
   });
 
   const [errors, setErrors] = useState({});
+  const [errorPhone, setErrorPhone] = useState(false);
   const [loading, setLoading] = useState(false);
   const [classes, setClasses] = useState([]);
   const [fetchingCategories, setFetchingCategories] = useState(false);
@@ -386,9 +387,31 @@ function SignUp() {
                         name="phoneNumber"
                         value={userData.phoneNumber}
                         onChange={handleUserData}
-                        type="number"
-                        error={!!errors.phoneNumber}
+                        type="tel"
+                        error={!!errors.phoneNumber || errorPhone}
                         helperText={errors.phoneNumber}
+                      />
+                    </motion.div>
+                  </Grid>
+
+                  {/*CONFIRM PHONE NUMBER */}
+                  <Grid size={{ xs: 12 }}>
+                    <motion.div
+                      initial="hidden"
+                      animate="visible"
+                      variants={fadeUp}
+                      custom={0.7}
+                    >
+                      <TextField
+                        fullWidth
+                        label="Confirm phone number"
+                        name="confirmPhoneNumber"
+                        onBlur={(e) =>
+                          setErrorPhone(e.target.value !== userData.phoneNumber)
+                        }
+                        type="tel"
+                        error={errorPhone}
+                        helperText={errorPhone && "Phone numbers do not match"}
                       />
                     </motion.div>
                   </Grid>
@@ -500,7 +523,7 @@ function SignUp() {
                         color="error"
                         fullWidth
                         size="large"
-                        disabled={loading}
+                        disabled={loading || errorPhone}
                         sx={{
                           py: 1.6,
                           borderRadius: 3,

@@ -8,6 +8,9 @@ import { Login } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { Link as ScrollLink } from "react-scroll";
 
+export const backgroundImage =
+  "https://images.unsplash.com/photo-1510590124886-dc2653b48bf0?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0";
+
 const fadeUp = {
   hidden: {
     opacity: 0,
@@ -41,9 +44,6 @@ function CandidateLogin() {
 
     setLoading(false);
   };
-
-  const backgroundImage =
-    "https://images.unsplash.com/photo-1510590124886-dc2653b48bf0?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0";
 
   // return (
   //   <Box
@@ -412,6 +412,20 @@ function CandidateLogin() {
                       }}
                     >
                       Don&apos;t have an account? Sign up
+                    </Link>
+                  </Typography>
+                </Box>
+                <Box mt={3} textAlign="center">
+                  <Typography variant="body2">
+                    <Link
+                      to="/teacher"
+                      style={{
+                        color: "GrayText",
+                        textDecoration: "none",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Login as a teacher
                     </Link>
                   </Typography>
                 </Box>
