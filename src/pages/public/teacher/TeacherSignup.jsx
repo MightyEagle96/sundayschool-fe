@@ -421,7 +421,7 @@ const TeacherSignup = () => {
                     >
                       <TextField
                         fullWidth
-                        label="Confirm Phone Number"
+                        label="Phone Number"
                         name="phoneNumber"
                         value={userData.phoneNumber}
                         onChange={handleUserData}
