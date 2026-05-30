@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { backgroundImage } from "../candidate/CandidateLogin";
 import { motion } from "framer-motion";
-import { EmailOutlined, Login, SchoolOutlined } from "@mui/icons-material";
+import { Login, SchoolOutlined } from "@mui/icons-material";
 import logo from "../../../assets/logo.png";
 import { httpService } from "../../../httpService";
 import { toast } from "react-toastify";
@@ -58,6 +58,11 @@ const TeacherSignup = () => {
   const navigate = useNavigate();
 
   const [categories, setClassCategories] = useState([]);
+
+  const [passwordCorrect, setPasswordCorrect] = useState(false);
+  const [hasTypedPassword, setHasTypedPassword] = useState(false);
+
+  const teacherPassword = "glory2glory";
 
   const handleUserData = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -539,6 +544,33 @@ const TeacherSignup = () => {
                     </motion.div>
                   </Grid>
 
+                  {/*CONFIRM PASSWORD */}
+                  <Grid size={{ xs: 12 }}>
+                    <motion.div
+                      initial="hidden"
+                      animate="visible"
+                      variants={fadeUp}
+                      custom={0.7}
+                    >
+                      <TextField
+                        fullWidth
+                        label="Teacher's password"
+                        name="password"
+                        type="password"
+                        onBlur={(e) =>
+                          setPasswordCorrect(e.target.value === teacherPassword)
+                        }
+                        onChange={(e) => setHasTypedPassword(true)}
+                        error={!passwordCorrect && hasTypedPassword}
+                        helperText={
+                          hasTypedPassword &&
+                          !passwordCorrect &&
+                          "Incorrect password"
+                        }
+                      />
+                    </motion.div>
+                  </Grid>
+
                   {/* BUTTON */}
                   <Grid size={{ xs: 12 }}>
                     <motion.div
@@ -559,7 +591,7 @@ const TeacherSignup = () => {
                             <Login />
                           )
                         }
-                        disabled={loading || errorPhone}
+                        disabled={loading || errorPhone || !passwordCorrect}
                         sx={{
                           py: 1.7,
                           borderRadius: 3,

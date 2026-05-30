@@ -8,13 +8,12 @@ function MyStudents() {
   const [classCategory, setClassCategory] = useState({});
   const [classData, setClassData] = useState({});
   const getStudents = async () => {
-    const { data, error } = await httpService("teacher/students");
+    const { data } = await httpService("teacher/students");
 
     if (data) {
       setStudents(data.students);
       setClassCategory(data.classCategory);
       setClassData(data.classData);
-      console.log(data);
     }
   };
 

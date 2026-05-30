@@ -119,7 +119,6 @@ function MainRoutes() {
     }
   }
 
-  console.log(user);
   return (
     <BrowserRouter>
       <div style={{ minHeight: "80vh" }}>
