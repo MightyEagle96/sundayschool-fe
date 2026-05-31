@@ -30,6 +30,7 @@ import StudentsPage from "../pages/private/admin/StudentsPage";
 import ExaminationResults from "../pages/private/admin/ExaminationResults";
 import MyStudents from "../pages/public/teacher/MyStudents";
 import Performance from "../pages/public/teacher/Performance";
+import ExamTeachers from "../pages/private/admin/ExamTeachers";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -83,6 +84,10 @@ function MainRoutes() {
     {
       path: "/admin/candidates",
       component: <Users />,
+    },
+    {
+      path: "/admin/teachers",
+      component: <ExamTeachers />,
     },
     { path: "/admin/classes", component: <ClassesPage /> },
     { path: "/admin/students", component: <StudentsPage /> },

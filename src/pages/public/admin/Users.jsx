@@ -50,7 +50,6 @@ function Users() {
     });
 
     if (data) {
-      console.log(data);
       setStudents(data.candidates);
       setRowCount(data.total);
     }

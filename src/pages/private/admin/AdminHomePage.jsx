@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Card, CardActionArea, Stack } from "@mui/material";
+import { Typography, Card, CardActionArea, Stack, Button } from "@mui/material";
 import { useAppUser } from "../../../contexts/AppUserContext";
 
 import { People, School } from "@mui/icons-material";
@@ -60,7 +60,12 @@ function AdminHomePage() {
                     </Typography>
                   </div>
 
-                  <People fontSize="large" />
+                  <div>
+                    <People fontSize="large" />
+                    <Button component={Link} to="/admin/candidates">
+                      View
+                    </Button>
+                  </div>
                 </div>
               </CardActionArea>
             </Card>
@@ -76,6 +81,9 @@ function AdminHomePage() {
               </div>
               <div>
                 <People fontSize="large" />
+                <Button component={Link} to="/admin/teachers">
+                  View
+                </Button>
               </div>
             </div>
             <Card className="col-lg-4 p-0 bg-light shadow-sm border-0 m-2">

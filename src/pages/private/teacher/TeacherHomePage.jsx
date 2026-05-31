@@ -4,6 +4,7 @@ import { useTheme } from "@mui/material/styles";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   Grid,
@@ -13,6 +14,8 @@ import {
 } from "@mui/material";
 import { stringAvatar } from "../candidate/CandidateHomePage";
 import { motion } from "framer-motion";
+import { KeyboardArrowRight } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 function TeacherHomePage() {
   const { user } = useAppUser();
@@ -97,6 +100,16 @@ function TeacherHomePage() {
                         >
                           Continue your Sunday School examination journey.
                         </Typography>
+
+                        <div className="mt-4">
+                          <Button
+                            endIcon={<KeyboardArrowRight />}
+                            component={Link}
+                            to="/teacher/students"
+                          >
+                            View your class
+                          </Button>
+                        </div>
                       </>
                     )}
                   </Grid>

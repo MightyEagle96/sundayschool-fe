@@ -45,6 +45,13 @@ function MyStudents() {
                 ({classCategory.name})
               </Typography>
             </Stack>
+
+            <div className="mt-3">
+              <Typography variant="h4" fontWeight={700} color="primary">
+                {students.length}{" "}
+                {students.length === 1 ? "student" : "students"}
+              </Typography>
+            </div>
           </div>
         )}
 
